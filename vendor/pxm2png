@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "Converting $1"
+open pxm2png.app --args "$1"
