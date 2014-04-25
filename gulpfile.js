@@ -8,7 +8,11 @@ var gulp = require("gulp"),
 
 gulp.task("default", function () {
 	return gulp.src(srcGlob)
-        .pipe(es6transpiler())
+        .pipe(es6transpiler({
+        	"globals": {
+				"Ω": true
+    		}
+        }))
         .pipe(gulp.dest("scripts"));
 });
 
