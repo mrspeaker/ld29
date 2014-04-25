@@ -32,7 +32,7 @@ function pxm2png (e) {
 		return;
 	}
 
-    spawn("./pxm2png", [e.path], {cwd: process.cwd() + "/vendor"});
+    spawn("./pxm2png", [e.path], {cwd: process.cwd() + "/lib/tools/"});
 
     console.log("PNG'd:", file);
 };
