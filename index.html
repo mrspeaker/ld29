@@ -5,9 +5,24 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="user-scalable=0, initial-scale=1.0" />
 	<title>LD29 by Mr Speaker</title>
-	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="res/main.css">
 </head>
 <body>
+	 <section>
+        <div id="fsboard">
+            <canvas id="board"></canvas>
+        </div>
+        <div id="sous"></div>
+        <div id="credits">
+            by <a href="http://www.mrspeaker.net/">Mr Speaker</a>. Go
+            <span id="fs">fullscreen</span> mode.
+        </div>
+    </section>
+
+    <!-- vendors -->
+    <script src="lib/jquery-2.1.0.js"></script>
+	<script src="lib/lodash-2.4.1.js"></script>
+
 	<!-- Ω library -->
 	<script src="lib/Ω/Ω.js"></script>
 	<script src="lib/Ω/utils/base.js"></script>
@@ -51,8 +66,14 @@
 
 	<!-- The game -->
 	<script>
-		var g = new Ω.Game(100, 100);
+		var g = new Ω.Game(700, 300);
 		console.log(g);
+
+		document
+		    .querySelector("#fs")
+		    .addEventListener("click", function () {
+		        Ω.utils.fullscreen.toggle("#fsboard");
+		    }, false);
 	</script>
 </body>
 </html>

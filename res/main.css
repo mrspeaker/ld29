@@ -1,0 +1,63 @@
+body {
+    background-color: #111;
+    margin: 0;
+    text-align: center;
+    font-family: helvetica, verdana, sans-serif;
+    font-size: 9pt;
+
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+#container {
+
+}
+
+canvas {
+
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+
+    width: 60%;
+    min-width: 700px;
+
+    cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjbQg61aAAAADUlEQVQYV2P4//8/IwAI/QL/+TZZdwAAAABJRU5ErkJggg=='),
+        none;
+
+}
+
+#credits {
+    color: #444;
+    font-size: 8pt;
+    width: 180px;
+
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    text-align: right;
+    padding:2px;
+    background-color: #000;
+}
+#credits a {
+    color: #FC55F5;
+}
+
+#fsboard:fullscreen {
+    width: 100%; height: 100%;
+}
+#fsboard:-webkit-full-screen {
+    width: 100%; height: 100%;
+}
+#fsboard:-moz-full-screen {
+    width: 100%; height: 100%;
+}
+
+#fs {
+    color : #FC55F5;
+    text-decoration: underline;
+    cursor: pointer;
+}
