@@ -31,9 +31,11 @@
         	var blockPixPos = this.path[0];
         	var blockCellPos = this.map.getBlockCell(blockPixPos);
         	var blockType = this.map.getBlock(blockPixPos);
-        	if (blockType > this.sheet.cellW) {
-        		//this.map.setBlock(blockPixPos, blockType - this.sheet.cellW);
+        	// Dodgy hack: if on first line == not searched
+        	if (blockType  < this.sheet.cellW) {
+        		this.map.setBlock(blockPixPos, blockType + this.sheet.cellW);
         	}
+
 
 			this.path = this.path.slice(1);
 
@@ -128,7 +130,7 @@
 
 				//c.fillRect(dot[0], dot[1], 10,10);
 				c.beginPath();
-				c.arc(dot[0], dot[1], 5, 0, Math.PI * 2, false);
+				c.arc(dot[0] + 15, dot[1] + 15, 5, 0, Math.PI * 2, false);
 				c.fill();
 
 			});

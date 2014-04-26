@@ -44,7 +44,11 @@
                 if (this.state.first()) {
                     this.anims.set("walk");
                 }
-                this.tick_LOOKING();
+                if (this.beach.path.length === 0) {
+                    this.state.set("IDLE");
+                } else {
+                    this.tick_LOOKING();
+                }
                 break;
             case "DIGGING":
                 if (this.state.first()) {
