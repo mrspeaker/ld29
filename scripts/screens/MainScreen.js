@@ -26,7 +26,7 @@
 
         render: function (gfx) {
 
-            this.clear(gfx, "hsl(200, 40%, 45%)");
+            this.clear(gfx, "hsl(198, 68%, 52%)");
 
         }
     });

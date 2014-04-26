@@ -14,10 +14,10 @@
                 "space": "space",
                 "touch": "touch",
                 "escape": "escape",
-                "left": "left",
-                "right": "right",
-                "up": "up",
-                "down": "down",
+                "left": ["left", "a"],
+                "right": ["right", "d"],
+                "up": ["up", "w"],
+                "down": ["down", "s"],
                 "moused": "mouse1"
             });
 

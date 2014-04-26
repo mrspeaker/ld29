@@ -64,7 +64,7 @@
 			}
 
 			if (this.drawing) {
-				this.target = [Math.max(0, camera.x + Ω.input.mouse.x), Math.max(0, camera.y + Ω.input.mouse.y)];
+				this.target = [Math.max(0, camera.x + Ω.input.mouse.x - 30), Math.max(0, camera.y + Ω.input.mouse.y - 0)];
 				this.targetBlock = this.map.getBlockCell(this.target);
 				var targetPixels = this.map.getCellPixels(this.targetBlock);
 				var last = this.path.length === 0 ? false : this.path[this.path.length - 1];
@@ -80,14 +80,14 @@
 
 			var speed = this.drawing ? 2 : 4;
 
-			if (Ω.input.mouse.x < Ω.env.w * 0.20) {
+			if (Ω.input.isDown("left")) {
 			    this.pos.x -= speed;
-			} else if (Ω.input.mouse.x > Ω.env.w * 0.80) {
+			} else if (Ω.input.isDown("right")) {
 			    this.pos.x += speed;
 			}
-			if (Ω.input.mouse.y < Ω.env.h * 0.20) {
+			if (Ω.input.isDown("up")) {
 			    this.pos.y -= speed;
-			} else if (Ω.input.mouse.y > Ω.env.h * 0.80) {
+			} else if (Ω.input.isDown("down")) {
 			    this.pos.y += speed;
 			}
 
@@ -99,16 +99,24 @@
 			this.width = width;
 			this.length = length;
 
+
+
 			var cells = [],
 				treasure = [];
+
 			for (var j = 0; j < length; j++) {
 				cells.push([]);
 				treasure.push([]);
 				for (var i = 0; i < width; i++) {
-					cells[j][i] = Ω.utils.rand(4) + 1;
 					treasure[j][i] = 0;
-					if (Ω.utils.oneIn(5)) {
-						treasure[j][i] = Ω.utils.rand(3) + 1;
+					if (j === 0) {
+						cells[j][i] = Ω.utils.rand(5) + 41;
+					}
+					else {
+						cells[j][i] = Ω.utils.rand(4) + 1;
+						if (Ω.utils.oneIn(5)) {
+							treasure[j][i] = Ω.utils.rand(3) + 1;
+						}
 					}
 				}
 			}
