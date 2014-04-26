@@ -89,6 +89,7 @@
 			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
 			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
 
+
 		},
 
 		generateMap: function (width, length) {

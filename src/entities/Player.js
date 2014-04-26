@@ -20,7 +20,7 @@
             this._super(x, y);
             this.beach = beach;
             this.anims = new Ω.Anims([
-                new Ω.Anim("walk", this.sheet, 60, [[0, 0], [1, 0]]),
+                new Ω.Anim("walk", this.sheet, 120, [[0, 0], [1, 0]]),
                 new Ω.Anim("dig", this.sheet, 60, [[0, 0], [2, 0]])
             ]);
 

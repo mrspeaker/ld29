@@ -19,7 +19,7 @@
 
 			this.pos = {
                 x: Ω.env.w / 2,
-                y: Ω.env.h / 2
+                y: 0
             };
 			this.target = [100, 100];
 			this.path = [];
@@ -85,6 +85,9 @@
 			} else if (Ω.input.isDown("down")) {
 			    this.pos.y += speed;
 			}
+
+			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
+			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
 
 
 		},
