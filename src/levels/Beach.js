@@ -6,12 +6,18 @@
 
 		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32, 32),
 
+		drawing: false,
+
 		init: function (width, length) {
 
 			var map = this.generateMap(width, length);
 			this.map = map.map;
 			this.treasure = map.treasure;
 
+			this.pos = {
+                x: Ω.env.w / 2,
+                y: Ω.env.h / 2
+            };
 			this.target = [100, 100];
 
 		},
@@ -20,8 +26,28 @@
 
 			// Mouse handling here.
 			if (Ω.input.pressed("moused")) {
-				this.target = [Ω.input.mouse.x - camera.x, Ω.input.mouse.y - camera.y];
+				this.drawing = true;
+				this.target = [Math.max(0, camera.x + Ω.input.mouse.x), Math.max(0, camera.y + Ω.input.mouse.y)];
+				console.log(this.map.getBlock([Ω.input.mouse.x, Ω.input.mouse.y]));//, camera);
 			}
+
+			if (Ω.input.released("moused")) {
+				this.drawing = false;
+			}
+
+			var speed = this.drawing ? 2 : 4;
+
+			if (Ω.input.mouse.x < Ω.env.w * 0.20) {
+			    this.pos.x -= speed;
+			} else if (Ω.input.mouse.x > Ω.env.w * 0.80) {
+			    this.pos.x += speed;
+			}
+			if (Ω.input.mouse.y < Ω.env.h * 0.20) {
+			    this.pos.y -= speed;
+			} else if (Ω.input.mouse.y > Ω.env.h * 0.80) {
+			    this.pos.y += speed;
+			}
+
 
 		},
 

@@ -17,10 +17,9 @@
 
             this.beach.tick(this.camera);
 
-            // Center camera on player
             this.camera.moveTo(
-                this.player.x - (Ω.env.w / 2),
-                this.player.y - (Ω.env.h / 2)
+                this.beach.pos.x,
+                this.beach.pos.y
             );
 
         },
