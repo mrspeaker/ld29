@@ -25,7 +25,13 @@
 
         load: function () {
 
-            this.setScreen(new window.MainScreen());
+            this.reset();
+
+        },
+
+        reset: function () {
+
+            this.setScreen(new window.TitleScreen());
 
         }
 

@@ -17,10 +17,11 @@
 
         cash: 0,
 
-        init: function (x, y, beach) {
+        init: function (x, y, screen) {
 
             this._super(x, y);
-            this.beach = beach;
+            this.beach = screen.beach;
+            this.screen = screen;
             this.anims = new Ω.Anims([
                 new Ω.Anim("walk", this.sheet, 200, [[0, 0], [1, 0]]),
                 new Ω.Anim("detect", this.sheet, 200, [[0, 0], [1, 0]]),
@@ -59,7 +60,6 @@
                     this.anims.set("dig");
                 }
                 if (this.state.count > 50) {
-                    console.log("YOu got!", this.state.data.treasure);
                     this.state.set("ROCKINGOUT", this.state.data);
                 }
                 this.anims.tick();
@@ -73,10 +73,13 @@
                 if (this.state.count > 60) {
                     this.state.set("LOOKING");
                 }
-
+                break;
+            case "CAPTURED":
+                if (this.state.count > 100) {
+                    this.screen.captured();
+                }
                 break;
             }
-
             return true;
 
         },
@@ -120,6 +123,12 @@
             }
 
             return true;
+        },
+
+        hit: function () {
+            if (this.state.isNot("CAPTURED")) {
+                this.state.set("CAPTURED");
+            }
         },
 
         render: function (gfx) {
