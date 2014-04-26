@@ -19,7 +19,7 @@
 
 			this.pos = {
                 x: Ω.env.w / 2,
-                y: Ω.env.h / 2
+                y: 0
             };
 			this.target = [100, 100];
 			this.path = [];
@@ -70,11 +70,6 @@
 				var last = this.path.length === 0 ? false : this.path[this.path.length - 1];
 				if (!last || targetPixels[0] !== last[0] || targetPixels[1] !== last[1]) {
 					this.path.push(targetPixels);
-					var blockType = this.map.getBlock(this.target);
-					if (blockType < this.sheet.cellW) {
-					//	this.map.setBlockCell(this.targetBlock, blockType + this.sheet.cellW);
-					}
-
 				}
 			}
 
@@ -91,6 +86,8 @@
 			    this.pos.y += speed;
 			}
 
+			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
+			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
 
 		},
 

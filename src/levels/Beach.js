@@ -70,11 +70,6 @@
 				var last = this.path.length === 0 ? false : this.path[this.path.length - 1];
 				if (!last || targetPixels[0] !== last[0] || targetPixels[1] !== last[1]) {
 					this.path.push(targetPixels);
-					var blockType = this.map.getBlock(this.target);
-					if (blockType < this.sheet.cellW) {
-					//	this.map.setBlockCell(this.targetBlock, blockType + this.sheet.cellW);
-					}
-
 				}
 			}
 
