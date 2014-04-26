@@ -11,14 +11,14 @@
             this._super(w, h);
 
             Ω.input.bind({
-                "space": "space",
                 "touch": "touch",
                 "escape": "escape",
                 "left": ["left", "a"],
                 "right": ["right", "d"],
                 "up": ["up", "w"],
                 "down": ["down", "s"],
-                "moused": "mouse1"
+                "moused": "mouse1",
+                "fire": ["space", "touch", "mouse1"]
             });
 
         },

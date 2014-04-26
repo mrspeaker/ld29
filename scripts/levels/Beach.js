@@ -26,9 +26,9 @@
 
 		},
 
-		search: function (pos, player) {
+		search: function (player) {
 			this.pathStarted = true;
-        	var blockPixPos = this.path[0];
+        	var blockPixPos = [player.x, player.y];
         	var blockCellPos = this.map.getBlockCell(blockPixPos);
         	var blockType = this.map.getBlock(blockPixPos);
         	// Dodgy hack: if on first line == not searched
@@ -51,6 +51,7 @@
 
 		ticka: function (camera) {
 
+			/*
 			// Mouse handling here.
 			if (Ω.input.pressed("moused")) {
 				this.drawing = true;
@@ -63,11 +64,11 @@
 				this.drawing = false;
 			}
 
-			var target = [Math.max(0, camera.x) + Ω.input.mouse.x, Math.max(0, camera.y + Ω.input.mouse.y)];
-			var targetBlock = this.map.getBlockCell(target);
-			var targetPixels = this.map.getCellPixels(targetBlock);
+			let target = [Math.max(0, camera.x) + Ω.input.mouse.x, Math.max(0, camera.y + Ω.input.mouse.y)];
+			let targetBlock = this.map.getBlockCell(target);
+			let targetPixels = this.map.getCellPixels(targetBlock);
 			if (this.drawing) {
-				var last = this.path.length === 0 ? false : this.path[this.path.length - 1];
+				let last = this.path.length === 0 ? false : this.path[this.path.length - 1];
 				if (!last || targetPixels[0] !== last[0] || targetPixels[1] !== last[1]) {
 					this.path.push(targetPixels);
 				}
@@ -87,6 +88,7 @@
 			} else if (Ω.input.isDown("down")) {
 			    this.pos.y += speed;
 			}
+			*/
 
 			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
 			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
@@ -114,7 +116,7 @@
 					}
 					else {
 						cells[j][i] = Ω.utils.rand(4) + 1;
-						if (Ω.utils.oneIn(5)) {
+						if (Ω.utils.oneIn(10)) {
 							treasure[j][i] = Ω.utils.rand(3) + 1;
 						}
 					}

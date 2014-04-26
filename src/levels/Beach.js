@@ -26,9 +26,9 @@
 
 		},
 
-		search: function (pos, player) {
+		search: function (player) {
 			this.pathStarted = true;
-        	var blockPixPos = this.path[0];
+        	var blockPixPos = [player.x, player.y];
         	var blockCellPos = this.map.getBlockCell(blockPixPos);
         	var blockType = this.map.getBlock(blockPixPos);
         	// Dodgy hack: if on first line == not searched
@@ -51,6 +51,7 @@
 
 		ticka: function (camera) {
 
+			/*
 			// Mouse handling here.
 			if (Ω.input.pressed("moused")) {
 				this.drawing = true;
@@ -87,6 +88,7 @@
 			} else if (Ω.input.isDown("down")) {
 			    this.pos.y += speed;
 			}
+			*/
 
 			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
 			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
@@ -114,7 +116,7 @@
 					}
 					else {
 						cells[j][i] = Ω.utils.rand(4) + 1;
-						if (Ω.utils.oneIn(5)) {
+						if (Ω.utils.oneIn(10)) {
 							treasure[j][i] = Ω.utils.rand(3) + 1;
 						}
 					}

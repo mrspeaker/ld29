@@ -7,8 +7,8 @@
         h: 32,
 
         speed: {
-            detect: 0.5,
-            move: 2.4
+            detect: 2,
+            move: 2.5
         },
 
         sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
@@ -41,19 +41,19 @@
                 this.state.set("IDLE");
                 break;
             case "IDLE":
-                if (this.beach.path.length) {
+                //if (this.beach.path.length) {
                     this.state.set("LOOKING");
-                }
+                //}
                 break;
             case "LOOKING":
                 if (this.state.first()) {
                     this.anims.set("walk");
                 }
                 if (this.beach.path.length === 0) {
-                    this.state.set("IDLE");
+                //    this.state.set("IDLE");
                 } else {
-                    this.tick_LOOKING();
                 }
+                this.tick_LOOKING();
                 break;
             case "DIGGING":
                 if (this.state.first()) {
@@ -80,6 +80,14 @@
                 }
                 break;
             }
+
+            if (Ω.input.pressed("fire")) {
+                this.detecting = true;
+            }
+            if (Ω.input.released("fire")) {
+                this.detecting = false;
+            }
+
             return true;
 
         },
@@ -89,10 +97,10 @@
             var xo = 0,
                 yo = 0,
                 target = this.beach.path[0],
-                speed = this.beach.pathStarted ? this.speed.detect : this.speed.move;
+                speed = this.detecting ? this.speed.detect : this.speed.move;
 
 
-            if (Math.abs(target[0] - this.x) > 5) {
+            /*if (Math.abs(target[0] - this.x) > 5) {
                 if (target[0] - this.x < 5) { xo -= speed; }
                 else if (target[0] - this.x > 5) { xo += speed; }
             } else
@@ -113,6 +121,19 @@
                     this.state.set("IDLE");
                 }
             }
+            */
+            if (Ω.input.isDown("left")) {
+                xo -= speed;
+            }
+            if (Ω.input.isDown("right")) {
+                xo += speed;
+            }
+            if (Ω.input.isDown("up")) {
+                yo -= speed;
+            }
+            if (Ω.input.isDown("down")) {
+                yo += speed;
+            }
 
 
             this.x += xo;
@@ -121,6 +142,19 @@
             if (xo  || yo) {
                 this.anims.tick();
             }
+
+            this.beach.pos.x = this.x - (Ω.env.w / 2);
+            this.beach.pos.y = this.y - (Ω.env.h / 2);
+
+
+            if (this.detecting) {
+                var gets = this.beach.search(this);
+                if (gets) {
+                    this.state.set("DIGGING", {treasure: gets});
+                    return true;
+                }
+            }
+
 
             return true;
         },
