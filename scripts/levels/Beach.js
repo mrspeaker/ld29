@@ -43,7 +43,6 @@
         	var treasure = this.treasure[blockCellPos[1]][blockCellPos[0]]
         	if (treasure) {
         		this.treasure[blockCellPos[1]][blockCellPos[0]] = 0;
-        		console.log("found treauser");
         	}
         	return treasure;
 		},
