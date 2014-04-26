@@ -15,7 +15,8 @@
 
             [this.add(new window.BeachBum(
                 Ω.math.snap(Ω.utils.rand(Ω.env.w), 32),
-                Ω.math.snap(Ω.utils.rand(Ω.env.h - 96), 32) + 32
+                Ω.math.snap(Ω.utils.rand(Ω.env.h - 96), 32) + 32,
+                Ω.utils.rand(2)
             ), "extras", 2) for (x of [1,2,3,4,5])];
 
             this.cop = this.add(new window.SurfPatrol(Ω.env.w, 10, this.player));
