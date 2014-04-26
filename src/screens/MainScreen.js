@@ -7,27 +7,26 @@
         init: function () {
 
             this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.2));
+            this.beach = new window.Beach(40, 10);
+            console.log(this.beach.map);
+            this.add(this.beach.map, "map", 1);
+            this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h);
 
         },
 
         tick: function () {
 
-            // Randomly add a bad guy
-            /*if (Ω.utils.oneIn(100)) {
-                this.add(
-                    new Baddie(this.player.x + (Ω.env.w / 2), Ω.utils.rand(0, Ω.env.h) | 0),
-                    "baddies" // Add to "baddies" group
-                );
-            }*/
-
-            //Ω.Physics.checkCollisions([this.get("baddies"), this.get("player-bullet")]);
-            //Ω.Physics.checkCollision(this.player, this.get("baddies"));
+            // Center camera on player
+            this.camera.moveTo(
+                this.player.x - (Ω.env.w / 2),
+                this.player.y - (Ω.env.h / 2)
+            );
 
         },
 
         render: function (gfx) {
 
-            this.clear(gfx, "hsl(195, 40%, 5%)");
+            this.clear(gfx, "hsl(200, 40%, 45%)");
 
         }
     });
