@@ -26,15 +26,23 @@
 
             var xo = 0,
                 yo = 0,
-                target = this.beach.target;
+                target = this.beach.path[0];
 
-            if (Math.abs(target[0] - this.x) > 5) {
-                if (target[0] - this.x < 5) { xo -= this.speed; }
-                else if (target[0] - this.x > 5) { xo += this.speed; }
-            }
-            if (Math.abs(target[1] - this.y) > 5) {
-                if (target[1] - this.y < 5) { yo -= this.speed; }
-                else if (target[1] - this.y > 5) { yo += this.speed; }
+            if (target) {
+
+                if (Math.abs(target[0] - this.x) > 5) {
+                    if (target[0] - this.x < 5) { xo -= this.speed; }
+                    else if (target[0] - this.x > 5) { xo += this.speed; }
+                } else
+                if (Math.abs(target[1] - this.y) > 5) {
+                    if (target[1] - this.y < 5) { yo -= this.speed; }
+                    else if (target[1] - this.y > 5) { yo += this.speed; }
+                }
+
+                if (!(xo || yo)) {
+                    this.beach.path = this.beach.path.slice(1);
+                }
+
             }
 
             this.x += xo;

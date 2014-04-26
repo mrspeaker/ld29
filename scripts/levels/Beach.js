@@ -7,6 +7,8 @@
 		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32, 32),
 
 		drawing: false,
+		target: null,
+		path: null,
 
 		init: function (width, length) {
 
@@ -19,6 +21,7 @@
                 y: Ω.env.h / 2
             };
 			this.target = [100, 100];
+			this.path = [];
 
 		},
 
@@ -27,12 +30,20 @@
 			// Mouse handling here.
 			if (Ω.input.pressed("moused")) {
 				this.drawing = true;
-				this.target = [Math.max(0, camera.x + Ω.input.mouse.x), Math.max(0, camera.y + Ω.input.mouse.y)];
-				console.log(this.map.getBlock([Ω.input.mouse.x, Ω.input.mouse.y]));//, camera);
+				this.path = [];
 			}
 
 			if (Ω.input.released("moused")) {
 				this.drawing = false;
+			}
+
+			if (this.drawing) {
+				this.target = [Math.max(0, camera.x + Ω.input.mouse.x), Math.max(0, camera.y + Ω.input.mouse.y)];
+				this.targetBlock = this.map.getBlockCell(this.target);
+				var last = this.path.length === 0 ? false : this.path[this.path.length - 1];
+				if (!last || this.targetBlock[0] !== last[0] || this.targetBlock[1] !== last[1]) {
+					this.path.push(this.map.getCellPixels(this.targetBlock));
+				}
 			}
 
 			var speed = this.drawing ? 2 : 4;
@@ -64,8 +75,8 @@
 				for (var i = 0; i < width; i++) {
 					cells[j][i] = Ω.utils.rand(4) + 1;
 					treasure[j][i] = 0;
-					if (Ω.utils.oneIn(20)) {
-						treasure[j][i] = Ω.utils.rand(3);
+					if (Ω.utils.oneIn(2)) {
+						treasure[j][i] = Ω.utils.rand(3) + 1;
 					}
 				}
 			}
