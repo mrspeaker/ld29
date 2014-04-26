@@ -12,11 +12,16 @@
 			this.map = map.map;
 			this.treasure = map.treasure;
 
+			this.target = [100, 100];
+
 		},
 
-		tick: function () {
+		tick: function (camera) {
 
 			// Mouse handling here.
+			if (Ω.input.pressed("moused")) {
+				this.target = [Ω.input.mouse.x - camera.x, Ω.input.mouse.y - camera.y];
+			}
 
 		},
 
