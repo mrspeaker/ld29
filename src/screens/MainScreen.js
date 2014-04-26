@@ -25,7 +25,7 @@
 
         tick: function () {
 
-            this.beach.ticka(this.camera);
+            this.beach.ticka(this.camera, this.player);
 
             this.camera.moveTo(
                 this.beach.pos.x,

@@ -28,7 +28,7 @@
 
 		search: function (player) {
 			this.pathStarted = true;
-        	var blockPixPos = [player.x, player.y];
+        	var blockPixPos = [player.x, player.y + 24];
         	var blockCellPos = this.map.getBlockCell(blockPixPos);
         	var blockType = this.map.getBlock(blockPixPos);
         	// Dodgy hack: if on first line == not searched
@@ -49,7 +49,7 @@
 
 		tick: function () { return true; },
 
-		ticka: function (camera) {
+		ticka: function (camera, player) {
 
 			/*
 			// Mouse handling here.
@@ -90,9 +90,15 @@
 			}
 			*/
 
+			let targetBlock = this.map.getBlockCell([player.x, player.y + 24]);
+			let targetPixels = this.map.getCellPixels(targetBlock);
+			this.hoverCell = targetPixels;
+
+			this.pos.x = player.x - (Ω.env.w / 2) + 24;
+            this.pos.y = player.y - (Ω.env.h / 2);
+
 			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
 			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
-
 
 		},
 
@@ -134,19 +140,20 @@
 
 			var c = gfx.ctx;
 
-			c.fillStyle = "rgba(0, 0, 0, 0.2)";
 
-			this.path.forEach(function (dot) {
+
+			/*this.path.forEach(function (dot) {
 
 				//c.fillRect(dot[0], dot[1], 10,10);
 				c.beginPath();
 				c.arc(dot[0] + 15, dot[1] + 15, 5, 0, Math.PI * 2, false);
 				c.fill();
 
-			});
+			});*/
 
 			if (this.hoverCell) {
-				c.fillRect(this.hoverCell[0], this.hoverCell[1], this.sheet.w, this.sheet.h);
+				c.strokeStyle = "rgba(0, 0, 0, 0.2)";
+				c.strokeRect(this.hoverCell[0], this.hoverCell[1], this.sheet.w, this.sheet.h);
 			}
 
 		}

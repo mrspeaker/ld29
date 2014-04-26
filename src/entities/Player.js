@@ -143,10 +143,6 @@
                 this.anims.tick();
             }
 
-            this.beach.pos.x = this.x - (Ω.env.w / 2);
-            this.beach.pos.y = this.y - (Ω.env.h / 2);
-
-
             if (this.detecting) {
                 var gets = this.beach.search(this);
                 if (gets) {
