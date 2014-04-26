@@ -9,6 +9,7 @@
 		drawing: false,
 		target: null,
 		path: null,
+		pathStarted: false,
 
 		init: function (width, length) {
 
@@ -25,12 +26,24 @@
 
 		},
 
+		searched: function (pos, player) {
+			this.pathStarted = true;
+        	var blockPos = this.path[0];
+        	var blockType = this.map.getBlock(blockPos);
+        	if (blockType > this.sheet.cellW) {
+        		this.map.setBlock(blockPos, blockType - this.sheet.cellW);
+        	}
+
+			this.path = this.path.slice(1);
+		},
+
 		tick: function (camera) {
 
 			// Mouse handling here.
 			if (Ω.input.pressed("moused")) {
 				this.drawing = true;
 				this.path = [];
+				this.pathStarted = false;
 			}
 
 			if (Ω.input.released("moused")) {
@@ -40,9 +53,15 @@
 			if (this.drawing) {
 				this.target = [Math.max(0, camera.x + Ω.input.mouse.x), Math.max(0, camera.y + Ω.input.mouse.y)];
 				this.targetBlock = this.map.getBlockCell(this.target);
+				var targetPixels = this.map.getCellPixels(this.targetBlock);
 				var last = this.path.length === 0 ? false : this.path[this.path.length - 1];
-				if (!last || this.targetBlock[0] !== last[0] || this.targetBlock[1] !== last[1]) {
-					this.path.push(this.map.getCellPixels(this.targetBlock));
+				if (!last || targetPixels[0] !== last[0] || targetPixels[1] !== last[1]) {
+					this.path.push(targetPixels);
+					var blockType = this.map.getBlock(this.target);
+					if (blockType < this.sheet.cellW) {
+						this.map.setBlockCell(this.targetBlock, blockType + this.sheet.cellW);
+					}
+
 				}
 			}
 

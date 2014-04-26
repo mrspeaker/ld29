@@ -5,7 +5,11 @@
     var Player = Ω.Entity.extend({
         w: 24,
         h: 32,
-        speed: 4,
+
+        speed: {
+            detect: 1,
+            move: 4
+        },
 
         sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
 
@@ -18,7 +22,6 @@
             ]);
 
             this.beach = beach;
-            console.log(beach)
 
         },
 
@@ -26,21 +29,22 @@
 
             var xo = 0,
                 yo = 0,
-                target = this.beach.path[0];
+                target = this.beach.path[0],
+                speed = this.beach.pathStarted ? this.speed.detect : this.speed.move;
 
             if (target) {
 
                 if (Math.abs(target[0] - this.x) > 5) {
-                    if (target[0] - this.x < 5) { xo -= this.speed; }
-                    else if (target[0] - this.x > 5) { xo += this.speed; }
+                    if (target[0] - this.x < 5) { xo -= speed; }
+                    else if (target[0] - this.x > 5) { xo += speed; }
                 } else
                 if (Math.abs(target[1] - this.y) > 5) {
-                    if (target[1] - this.y < 5) { yo -= this.speed; }
-                    else if (target[1] - this.y > 5) { yo += this.speed; }
+                    if (target[1] - this.y < 5) { yo -= speed; }
+                    else if (target[1] - this.y > 5) { yo += speed; }
                 }
 
                 if (!(xo || yo)) {
-                    this.beach.path = this.beach.path.slice(1);
+                    this.beach.searched();
                 }
 
             }
