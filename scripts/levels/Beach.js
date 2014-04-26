@@ -4,12 +4,13 @@
 
 	var Beach = Ω.Class.extend({
 
-		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32, 32),
+		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32),
 
 		drawing: false,
-		target: null,
+
 		path: null,
 		pathStarted: false,
+		hoverCell: null,
 
 		init: function (width, length) {
 
@@ -21,7 +22,6 @@
                 x: Ω.env.w / 2,
                 y: 0
             };
-			this.target = [100, 100];
 			this.path = [];
 
 		},
@@ -57,20 +57,23 @@
 				this.drawing = true;
 				this.path = [];
 				this.pathStarted = false;
+				this.hoverCell = null;
 			}
 
 			if (Ω.input.released("moused")) {
 				this.drawing = false;
 			}
 
+			var target = [Math.max(0, camera.x) + Ω.input.mouse.x, Math.max(0, camera.y + Ω.input.mouse.y)];
+			var targetBlock = this.map.getBlockCell(target);
+			var targetPixels = this.map.getCellPixels(targetBlock);
 			if (this.drawing) {
-				this.target = [Math.max(0, camera.x + Ω.input.mouse.x - 30), Math.max(0, camera.y + Ω.input.mouse.y - 0)];
-				this.targetBlock = this.map.getBlockCell(this.target);
-				var targetPixels = this.map.getCellPixels(this.targetBlock);
 				var last = this.path.length === 0 ? false : this.path[this.path.length - 1];
 				if (!last || targetPixels[0] !== last[0] || targetPixels[1] !== last[1]) {
 					this.path.push(targetPixels);
 				}
+			} else {
+				this.hoverCell = targetPixels;
 			}
 
 			var speed = this.drawing ? 2 : 4;
@@ -140,6 +143,10 @@
 				c.fill();
 
 			});
+
+			if (this.hoverCell) {
+				c.fillRect(this.hoverCell[0], this.hoverCell[1], this.sheet.w, this.sheet.h);
+			}
 
 		}
 
