@@ -8,7 +8,15 @@
 
 		init: function (width, length) {
 
-			this.map = this.generateMap(width, length);
+			var map = this.generateMap(width, length);
+			this.map = map.map;
+			this.treasure = map.treasure;
+
+		},
+
+		tick: function () {
+
+			// Mouse handling here.
 
 		},
 
@@ -17,15 +25,24 @@
 			this.width = width;
 			this.length = length;
 
-			var cells = [];
+			var cells = [],
+				treasure = [];
 			for (var j = 0; j < length; j++) {
 				cells.push([]);
+				treasure.push([]);
 				for (var i = 0; i < width; i++) {
 					cells[j][i] = Ω.utils.rand(4) + 1;
+					treasure[j][i] = 0;
+					if (Ω.utils.oneIn(20)) {
+						treasure[j][i] = Ω.utils.rand(3);
+					}
 				}
 			}
 
-			return new Ω.Map(this.sheet, cells, 5);
+			return {
+				map: new Ω.Map(this.sheet, cells, 5),
+				treasure: treasure
+			};
 
 		}
 

@@ -7,9 +7,15 @@
         h: 32,
         speed: 4,
 
+        sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
+
         init: function (x, y) {
 
             this._super(x, y);
+
+            this.anims = new Ω.Anims([
+                new Ω.Anim("walk", this.sheet, 60, [[0, 0], [1, 0]])
+            ]);
 
         },
 
@@ -26,6 +32,10 @@
             this.x += xo;
             this.y += yo;
 
+            if (xo  || yo) {
+                this.anims.tick();
+            }
+
             return true;
         },
 
@@ -33,8 +43,7 @@
 
             var c = gfx.ctx;
 
-            c.fillStyle = "#333";
-            c.fillRect(this.x, this.y, this.w, this.h);
+            this.anims.render(gfx, this.x, this.y);
 
         }
 
