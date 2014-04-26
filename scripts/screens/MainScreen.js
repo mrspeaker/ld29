@@ -11,6 +11,8 @@
             this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.2, this.beach));
             this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 100);
 
+            this.add(new window.BeachBum(100, 100));
+
         },
 
         tick: function () {
