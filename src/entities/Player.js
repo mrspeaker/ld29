@@ -22,7 +22,8 @@
             this._super(x, y);
             this.beach = beach;
             this.anims = new Ω.Anims([
-                new Ω.Anim("walk", this.sheet, 120, [[0, 0], [1, 0]]),
+                new Ω.Anim("walk", this.sheet, 200, [[0, 0], [1, 0]]),
+                new Ω.Anim("detect", this.sheet, 200, [[0, 0], [1, 0]]),
                 new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
                 new Ω.Anim("rockout", this.sheet, 120, [[0, 1], [0, 10]])
             ]);
@@ -59,13 +60,14 @@
                 }
                 if (this.state.count > 50) {
                     console.log("YOu got!", this.state.data.treasure);
-                    this.state.set("ROCKINGOUT");
+                    this.state.set("ROCKINGOUT", this.state.data);
                 }
                 this.anims.tick();
                 break;
             case "ROCKINGOUT":
                 if (this.state.first()) {
                     this.anims.set("rockout");
+                    this.cash += this.state.data.treasure;
                 }
                 this.anims.tick();
                 if (this.state.count > 60) {

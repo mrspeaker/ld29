@@ -4,6 +4,8 @@
 
     var MainScreen = Ω.Screen.extend({
 
+        font: new Ω.Font("res/images/mamefont.png", 16, 16, "abcdefghijklmnopqrstuvwxyz0123456789 .,:!?'\"&<>$"),
+
         init: function () {
 
             this.beach = this.add(new window.Beach(40, 10));
@@ -12,6 +14,7 @@
             this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 100);
 
             this.add(new window.BeachBum(100, 100));
+            this.add(new window.SurfPatrol(Ω.env.w, 10, this.player));
 
         },
 
@@ -34,10 +37,13 @@
 
         renderPost: function (gfx) {
 
-            var c = gfx.ctx;
+            var c = gfx.ctx,
+                top = Ω.env.h - 100;
 
             c.fillStyle = "hsl(200, 40%, 20%)";
-            c.fillRect(0, Ω.env.h - 100, Ω.env.w, 100);
+            c.fillRect(0, top, Ω.env.w, 100);
+
+            this.font.render(gfx, "cash: $" + this.player.cash, 16, top + 16);
 
         }
 
