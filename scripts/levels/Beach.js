@@ -26,18 +26,29 @@
 
 		},
 
-		searched: function (pos, player) {
+		search: function (pos, player) {
 			this.pathStarted = true;
-        	var blockPos = this.path[0];
-        	var blockType = this.map.getBlock(blockPos);
+        	var blockPixPos = this.path[0];
+        	var blockCellPos = this.map.getBlockCell(blockPixPos);
+        	var blockType = this.map.getBlock(blockPixPos);
         	if (blockType > this.sheet.cellW) {
-        		this.map.setBlock(blockPos, blockType - this.sheet.cellW);
+        		//this.map.setBlock(blockPixPos, blockType - this.sheet.cellW);
         	}
 
 			this.path = this.path.slice(1);
+
+			// Any treasure?
+        	var treasure = this.treasure[blockCellPos[1]][blockCellPos[0]]
+        	if (treasure) {
+        		this.treasure[blockCellPos[1]][blockCellPos[0]] = 0;
+        		console.log("found treauser");
+        	}
+        	return treasure;
 		},
 
-		tick: function (camera) {
+		tick: function () { return true; },
+
+		ticka: function (camera) {
 
 			// Mouse handling here.
 			if (Ω.input.pressed("moused")) {
@@ -59,7 +70,7 @@
 					this.path.push(targetPixels);
 					var blockType = this.map.getBlock(this.target);
 					if (blockType < this.sheet.cellW) {
-						this.map.setBlockCell(this.targetBlock, blockType + this.sheet.cellW);
+					//	this.map.setBlockCell(this.targetBlock, blockType + this.sheet.cellW);
 					}
 
 				}
@@ -94,7 +105,7 @@
 				for (var i = 0; i < width; i++) {
 					cells[j][i] = Ω.utils.rand(4) + 1;
 					treasure[j][i] = 0;
-					if (Ω.utils.oneIn(2)) {
+					if (Ω.utils.oneIn(5)) {
 						treasure[j][i] = Ω.utils.rand(3) + 1;
 					}
 				}
@@ -104,6 +115,23 @@
 				map: new Ω.Map(this.sheet, cells, 5),
 				treasure: treasure
 			};
+
+		},
+
+		render: function (gfx) {
+
+			var c = gfx.ctx;
+
+			c.fillStyle = "rgba(0, 0, 0, 0.2)";
+
+			this.path.forEach(function (dot) {
+
+				//c.fillRect(dot[0], dot[1], 10,10);
+				c.beginPath();
+				c.arc(dot[0], dot[1], 5, 0, Math.PI * 2, false);
+				c.fill();
+
+			});
 
 		}
 

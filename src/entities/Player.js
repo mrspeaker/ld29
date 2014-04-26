@@ -13,41 +13,83 @@
 
         sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
 
+        state: null,
+
         init: function (x, y, beach) {
 
             this._super(x, y);
-
+            this.beach = beach;
             this.anims = new Ω.Anims([
-                new Ω.Anim("walk", this.sheet, 60, [[0, 0], [1, 0]])
+                new Ω.Anim("walk", this.sheet, 60, [[0, 0], [1, 0]]),
+                new Ω.Anim("dig", this.sheet, 60, [[0, 0], [2, 0]])
             ]);
 
-            this.beach = beach;
+            this.state = new Ω.utils.State("BORN");
 
         },
 
         tick: function () {
+
+            this.state.tick();
+            switch(this.state.get()) {
+            case "BORN":
+                this.state.set("IDLE");
+                break;
+            case "IDLE":
+                if (this.beach.path.length) {
+                    this.state.set("LOOKING");
+                }
+                break;
+            case "LOOKING":
+                if (this.state.first()) {
+                    this.anims.set("walk");
+                }
+                this.tick_LOOKING();
+                break;
+            case "DIGGING":
+                if (this.state.first()) {
+                    this.anims.set("dig");
+                }
+                if (this.state.count > 50) {
+                    this.state.set("LOOKING");
+                }
+                this.anims.tick();
+                break;
+            }
+
+            return true;
+
+        },
+
+        tick_LOOKING: function () {
 
             var xo = 0,
                 yo = 0,
                 target = this.beach.path[0],
                 speed = this.beach.pathStarted ? this.speed.detect : this.speed.move;
 
-            if (target) {
 
-                if (Math.abs(target[0] - this.x) > 5) {
-                    if (target[0] - this.x < 5) { xo -= speed; }
-                    else if (target[0] - this.x > 5) { xo += speed; }
-                } else
-                if (Math.abs(target[1] - this.y) > 5) {
-                    if (target[1] - this.y < 5) { yo -= speed; }
-                    else if (target[1] - this.y > 5) { yo += speed; }
-                }
-
-                if (!(xo || yo)) {
-                    this.beach.searched();
-                }
-
+            if (Math.abs(target[0] - this.x) > 5) {
+                if (target[0] - this.x < 5) { xo -= speed; }
+                else if (target[0] - this.x > 5) { xo += speed; }
+            } else
+            if (Math.abs(target[1] - this.y) > 5) {
+                if (target[1] - this.y < 5) { yo -= speed; }
+                else if (target[1] - this.y > 5) { yo += speed; }
             }
+
+            if (!(xo || yo)) {
+
+                if (this.beach.search()) {
+                    this.state.set("DIGGING");
+                    return true;
+                }
+
+                if (this.beach.path.length === 0) {
+                    this.state.set("IDLE");
+                }
+            }
+
 
             this.x += xo;
             this.y += yo;
