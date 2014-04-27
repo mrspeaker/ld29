@@ -4,7 +4,7 @@
 
     var Player = Ω.Entity.extend({
         w: 24,
-        h: 24,
+        h: 20,
 
         speed: {
             detect: 2,
@@ -157,9 +157,6 @@
 
             this.move(xo, yo, this.beach.map);
 
-            //this.x += xo;
-            //this.y += yo;
-
             //if (this.detecting || xo || yo) {
                 this.anims.tick();
             //}
@@ -195,10 +192,10 @@
 
             var c = gfx.ctx;
 
-            this.anims.render(gfx, this.x, this.y);
+            this.anims.render(gfx, this.x, this.y - 16);
 
-            c.strokeStyle = "#f00";
-            c.strokeRect(this.x, this.y, this.w, this.h);
+            /*c.strokeStyle = "#f00";
+            c.strokeRect(this.x, this.y, this.w, this.h);*/
 
         }
 
