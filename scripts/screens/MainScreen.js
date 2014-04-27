@@ -12,6 +12,14 @@
 
         init: function () {
 
+            this.reset();
+
+        },
+
+        reset: function () {
+
+            this.removeAll();
+
             var env = {
                 x:0,
                 y:0,
@@ -35,18 +43,24 @@
         tick: function () {
 
             this.state.tick();
-            console.log(this.state.get());
+
             switch (this.state.get()) {
             case "BORN":
                 this.state.set("DAYBREAK");
                 break;
             case "DAYBREAK":
-                this.curTime = 0;
-                this.state.set("DAY");
+                if (this.state.first()) {
+                    this.tick_DAY();
+                }
+                if (this.state.count === 30) {
+                    this.curTime = 0;
+                    window.game.setDialog(new window.PopupDialog("day break!"));
+                    this.state.set("DAY");
+                }
                 break;
             case "DAY":
                 this.curTime++;
-                if (this.curTime / 30 > 8) {
+                if (this.curTime / 100 > 8) {
                     // Day over.
                     this.state.set("SUNSET");
                 } else {
@@ -54,7 +68,14 @@
                 }
                 break;
             case "SUNSET":
-                this.state.set("DAYBREAK");
+                if (this.state.first()) {
+                    window.game.setDialog(new window.PopupDialog("Day is done."));
+
+                }
+                if (this.state.count > 10) {
+                    this.state.set("DAYBREAK");
+                    this.reset();
+                }
                 break;
             case "GAMEOVER":
                 window.game.reset();

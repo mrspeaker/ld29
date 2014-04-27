@@ -30,6 +30,10 @@
 
 		},
 
+		reset: function () {
+			this.state.set("BORN");
+		},
+
 		tick: function () {
 
 			this.state.tick();
