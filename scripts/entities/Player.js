@@ -52,9 +52,19 @@
             case "DIGGING":
                 if (this.state.first()) {
                     this.anims.set("dig");
+                    this.digging = true;
                 }
-                if (this.state.count > 50) {
-                    this.state.set("ROCKINGOUT", this.state.data);
+                if (Ω.input.released("dig")) {
+                    this.digging = false;
+                    this.state.set("LOOKING");
+                } else if (this.state.count > 50) {
+                    this.digging = false;
+                    var gets = this.beach.search(this, true);
+                    if (gets) {
+                        this.state.set("ROCKINGOUT", {treasure: gets});
+                    } else {
+                        console.log("Found squat.");
+                    }
                 }
                 this.anims.tick();
                 break;
@@ -94,17 +104,19 @@
                 yo = 0,
                 speed = this.detecting ? this.speed.detect : this.speed.move;
 
-            if (Ω.input.isDown("left")) {
-                xo -= speed;
-            }
-            if (Ω.input.isDown("right")) {
-                xo += speed;
-            }
-            if (Ω.input.isDown("up")) {
-                yo -= speed;
-            }
-            if (Ω.input.isDown("down")) {
-                yo += speed;
+            if (!this.digging) {
+                if (Ω.input.isDown("left")) {
+                    xo -= speed;
+                }
+                if (Ω.input.isDown("right")) {
+                    xo += speed;
+                }
+                if (Ω.input.isDown("up")) {
+                    yo -= speed;
+                }
+                if (Ω.input.isDown("down")) {
+                    yo += speed;
+                }
             }
 
             this.x += xo;
@@ -125,7 +137,7 @@
             // Better if it was "isdown" and abort when
             if (Ω.input.pressed("dig")) {
                 // TODO: searches every frame... not just once.
-                var gets$0 = this.beach.search(this, true);
+                var gets$0 = this.beach.search(this, false);
                 if (gets$0) {
                     this.state.set("DIGGING", {treasure: gets$0});
                     return true;

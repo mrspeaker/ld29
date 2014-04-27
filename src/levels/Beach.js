@@ -33,7 +33,6 @@
 			// Any treasure?
 			let treasure = 0;
 			if (blockCellPos[1] > -1) {
-				console.log(blockCellPos[1] ,this.treasure.length);
         		treasure = this.treasure[blockCellPos[1]][blockCellPos[0]]
         		if (treasure && removeIfFound) {
         			this.treasure[blockCellPos[1]][blockCellPos[0]] = 0;
