@@ -30,7 +30,7 @@
                 new Ω.Anim("detectUp", this.sheet, 200, [[3, 0], [4, 0], [3, 0], [2, 0]]),
                 new Ω.Anim("detectDown", this.sheet, 200, [[6, 0], [7, 0], [6, 0], [5, 0]]),
                 new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
-                new Ω.Anim("rockout", this.sheet, 120, [[0, 1], [0, 10]])
+                new Ω.Anim("rockout", this.sheet, 120, [[2, 1], [3, 1]])
             ]);
 
             this.state = new Ω.utils.State("BORN");
@@ -49,7 +49,7 @@
                 break;
             case "LOOKING":
                 if (this.state.first()) {
-                    this.anims.set("walk" + this.dirs === DIRS.up ? "Up" : "Down");
+                    this.anims.set(`walk${ this.dir === DIRS.up ? "Up" : "Down"}`);
                 }
                 this.tick_LOOKING();
                 break;
@@ -91,11 +91,11 @@
 
             if (Ω.input.pressed("fire")) {
                 this.detecting = true;
-                this.anims.set("detect" + (this.dir === DIRS.up ? "Up" : "Down"), true);
+                this.anims.set(`detect${ this.dir === DIRS.up ? "Up" : "Down"}`);
             }
             if (Ω.input.released("fire")) {
                 this.detecting = false;
-                this.anims.set("walk" + this.dirs === DIRS.up ? "Up" : "Down");
+                this.anims.set(`walk${ this.dir === DIRS.up ? "Up" : "Down"}`);
             }
 
             return true;
