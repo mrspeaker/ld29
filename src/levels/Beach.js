@@ -14,6 +14,9 @@
 			this.map = map.map;
 			this.treasure = map.treasure;
 
+			this.w = this.map.w;
+			this.h = this.map.h;
+
 			this.pos = {
                 x: Ω.env.w / 2,
                 y: 0
@@ -26,7 +29,7 @@
         	var blockCellPos = this.map.getBlockCell(blockPixPos);
         	var blockType = this.map.getBlock(blockPixPos);
         	// Dodgy hack: if on first line == not searched
-        	if (blockType < this.sheet.cellW) {
+        	if (!removeIfFound && blockType < this.sheet.cellW) {
         		this.map.setBlock(blockPixPos, blockType + this.sheet.cellW);
         	}
 
@@ -39,6 +42,17 @@
         		}
         	}
         	return treasure;
+		},
+
+		dig: function (player, stage) {
+			var blockPixPos = [player.x, player.y + 24];
+			//var blockCellPos = this.map.getBlockCell(blockPixPos);
+			//var blockType = this.map.getBlock(blockPixPos);
+			// Dodgy hack: if on first line == not searched
+			//if (blockType < this.sheet.cellW) {
+				this.map.setBlock(blockPixPos, this.sheet.cellW + 6 + stage);
+			//}
+
 		},
 
 		tick: function () { return true; },

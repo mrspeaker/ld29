@@ -58,6 +58,19 @@
                     this.anims.set("dig");
                     this.digging = true;
                 }
+
+                if (this.state.count === 10) {
+                    this.beach.dig(this, 0);
+                }
+                if (this.state.count === 20) {
+                    this.beach.dig(this, 1);
+                }
+                if (this.state.count === 30) {
+                    this.beach.dig(this, 2);
+                }
+                if (this.state.count === 40) {
+                    this.beach.dig(this, 3);
+                }
                 if (Ω.input.released("dig")) {
                     this.digging = false;
                     this.state.set("LOOKING");
