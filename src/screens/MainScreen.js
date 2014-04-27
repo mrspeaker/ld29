@@ -13,19 +13,13 @@
             this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.2, this));
             this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 100);
 
-            [this.add(new window.BeachBum(
-                Ω.math.snap(Ω.utils.rand(this.beach.w), 32),
-                Ω.math.snap(Ω.utils.rand(this.beach.h - 96), 32) + 32,
-                Ω.utils.rand(2)
-            ), "extras", 2) for (x of [1,2,3,4,5,6,7,8,9])];
+            this.beach.setPlayer(this.player);
 
-            this.cop = this.add(new window.SurfPatrol(Ω.env.w, 10, this.player));
+            this.cop = this.add(new window.SurfPatrol(Ω.env.w, 10, this));
 
         },
 
         tick: function () {
-
-            this.beach.ticka(this.camera, this.player);
 
             this.camera.moveTo(
                 this.beach.pos.x,

@@ -2,13 +2,16 @@
 
 	"use strict";
 
-	var Beach = Ω.Class.extend({
+	var Beach = Ω.Entity.extend({
 
 		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32),
 
 		hoverCell: null,
+		walkableSandCells: null,
 
 		init: function (width, length) {
+
+			this.walkableSandCells = this.sheet.cellW * 2;
 
 			var map = this.generateMap(width, length);
 			this.map = map.map;
@@ -22,6 +25,22 @@
                 y: 0
             };
 
+            var bb = [this.add(new window.BeachBum(
+                Ω.math.snap(Ω.utils.rand(this.w), 32),
+                Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
+                Ω.utils.rand(2)
+            ), "extras", 2) for (x of [1,2,3,4,5,6,7,8,9])];
+
+            bb.forEach((b) => {
+            	var cell = this.map.getBlockCell([b.x, b.y]);
+            	this.map.cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+            	this.map.cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+            });
+
+		},
+
+		setPlayer: function (player) {
+			this.player = player;
 		},
 
 		search: function (player, removeIfFound) {
@@ -55,9 +74,11 @@
 
 		},
 
-		tick: function () { return true; },
+		//tick: function () { return true; },
 
-		ticka: function (camera, player) {
+		tick: function (camera) {
+
+			let player = this.player;
 
 			let targetBlock = this.map.getBlockCell([player.x, player.y + 24]);
 			let targetPixels = this.map.getCellPixels(targetBlock);
@@ -68,6 +89,8 @@
 
 			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
 			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
+
+			return true;
 
 		},
 
@@ -97,7 +120,7 @@
 			}
 
 			return {
-				map: new Ω.Map(this.sheet, cells, 5),
+				map: new Ω.Map(this.sheet, cells, this.walkableSandCells),
 				treasure: treasure
 			};
 

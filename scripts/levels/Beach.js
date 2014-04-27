@@ -2,13 +2,16 @@
 
 	"use strict";
 
-	var Beach = Ω.Class.extend({
+	var Beach = Ω.Entity.extend({
 
 		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32),
 
 		hoverCell: null,
+		walkableSandCells: null,
 
-		init: function (width, length) {
+		init: function (width, length) {var this$0 = this;
+
+			this.walkableSandCells = this.sheet.cellW * 2;
 
 			var map = this.generateMap(width, length);
 			this.map = map.map;
@@ -22,6 +25,22 @@
                 y: 0
             };
 
+            var bb = (function(){function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;if(typeof v==='object'&&typeof v['@@iterator']==='function')return v['@@iterator']();}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;var $result$0 = [], x;$D$3 = ([1,2,3,4,5,6,7,8,9]);$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for(; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){x = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);{$result$0.push(this.add(new window.BeachBum(
+                Ω.math.snap(Ω.utils.rand(this.w), 32),
+                Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
+                Ω.utils.rand(2)
+            ), "extras", 2))}};;return $result$0}).call(this);
+
+            bb.forEach(function(b)  {
+            	var cell = this$0.map.getBlockCell([b.x, b.y]);
+            	this$0.map.cells[cell[1]][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
+            	this$0.map.cells[cell[1] + 1][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
+            });
+
+		},
+
+		setPlayer: function (player) {
+			this.player = player;
 		},
 
 		search: function (player, removeIfFound) {
@@ -55,9 +74,11 @@
 
 		},
 
-		tick: function () { return true; },
+		//tick: function () { return true; },
 
-		ticka: function (camera, player) {
+		tick: function (camera) {
+
+			var player = this.player;
 
 			var targetBlock = this.map.getBlockCell([player.x, player.y + 24]);
 			var targetPixels = this.map.getCellPixels(targetBlock);
@@ -68,6 +89,8 @@
 
 			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
 			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
+
+			return true;
 
 		},
 
@@ -97,7 +120,7 @@
 			}
 
 			return {
-				map: new Ω.Map(this.sheet, cells, 5),
+				map: new Ω.Map(this.sheet, cells, this.walkableSandCells),
 				treasure: treasure
 			};
 

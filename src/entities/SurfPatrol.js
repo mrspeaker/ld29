@@ -15,7 +15,7 @@
 
 		state: null,
 
-		init: function (x, y, player) {
+		init: function (x, y, screen) {
 
 			this._super(x, y);
 
@@ -25,7 +25,8 @@
 
 			this.state = new Ω.utils.State("BORN");
 
-			this.player = player;
+			this.player = screen.player;
+			this.beach = screen.beach;
 
 		},
 
@@ -58,35 +59,45 @@
 
 		tick_PATROL: function () {
 
+			var xo = 0,
+				yo = 0;
+
 			switch (Ω.utils.now() / 2000 % 4 | 0) {
 			case 0:
-				this.x -= this.speed.patrol;
+				xo -= this.speed.patrol;
 				break;
 			case 2:
-				this.x += this.speed.patrol;
+				xo += this.speed.patrol;
 				break;
 			case 1:
-				this.y -= this.speed.patrol;
+				yo -= this.speed.patrol;
 				break;
 			case 3:
-				this.y += this.speed.patrol;
+				yo += this.speed.patrol;
 				break;
 			}
+
+			this.move(xo, yo, this.beach.map);
 		},
 
 		tick_CHASE: function () {
+			var xo = 0,
+				yo = 0;
+
 			if (this.player.x < this.x) {
-				this.x -= this.speed.chase;
+				xo -= this.speed.chase;
 			}
 			if (this.player.x > this.x) {
-				this.x += this.speed.chase;
+				xo += this.speed.chase;
 			}
 			if (this.player.y > this.y) {
-				this.y += this.speed.chase;
+				yo += this.speed.chase;
 			}
 			if (this.player.y < this.y) {
-				this.y -= this.speed.chase;
+				yo -= this.speed.chase;
 			}
+
+			this.move(xo, yo, this.beach.map);
 		},
 
 		render: function (gfx) {

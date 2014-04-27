@@ -145,8 +145,10 @@
                 }
             }
 
-            this.x += xo;
-            this.y += yo;
+            this.move(xo, yo, this.beach.map);
+
+            //this.x += xo;
+            //this.y += yo;
 
             if (this.detecting || xo || yo) {
                 this.anims.tick();
