@@ -6,6 +6,8 @@
 
         font: new Ω.Font("res/images/mamefont.png", 16, 16, "abcdefghijklmnopqrstuvwxyz0123456789 .,:!?'\"&<>$"),
 
+        hud: new Ω.Image("res/images/hud.png"),
+
         state: null,
         autoTick: false,
         curTime: 0,
@@ -26,13 +28,13 @@
                 x:0,
                 y:0,
                 w:Ω.env.w,
-                h:Ω.env.h - 100
+                h:Ω.env.h - 70
             };
 
             this.beach = this.add(new window.Beach(22, 8, env));
             this.add(this.beach.map, "map", 1);
             this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.15, this));
-            this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 100);
+            this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 70);
 
             this.beach.setPlayer(this.player);
 
@@ -129,10 +131,11 @@
         renderPost: function (gfx) {
 
             var c = gfx.ctx,
-                top = Ω.env.h - 100;
+                top = gfx.h - 70;
 
-            c.fillStyle = "hsl(200, 40%, 20%)";
-            c.fillRect(0, top, Ω.env.w, 100);
+            //c.fillStyle = "hsl(200, 40%, 20%)";
+            //c.fillRect(0, top, Ω.env.w, 100);
+            this.hud.render(gfx, 0, top - 20);
 
             this.font.render(gfx, "cash: $" + (this.cashcashmoney + this.player.cash), 16, top + 16);
             this.font.render(gfx, "time: " + (this.curTime / 200 | 0), 16, top + 36);
