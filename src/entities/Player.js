@@ -8,7 +8,7 @@
 
         speed: {
             detect: 2,
-            move: 3.5
+            move: 3
         },
 
         sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
