@@ -6,10 +6,6 @@
 
 		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32),
 
-		drawing: false,
-
-		path: null,
-		pathStarted: false,
 		hoverCell: null,
 
 		init: function (width, length) {
@@ -22,12 +18,10 @@
                 x: Ω.env.w / 2,
                 y: 0
             };
-			this.path = [];
 
 		},
 
 		search: function (player) {
-			this.pathStarted = true;
         	var blockPixPos = [player.x, player.y + 24];
         	var blockCellPos = this.map.getBlockCell(blockPixPos);
         	var blockType = this.map.getBlock(blockPixPos);
@@ -35,9 +29,6 @@
         	if (blockType  < this.sheet.cellW) {
         		this.map.setBlock(blockPixPos, blockType + this.sheet.cellW);
         	}
-
-
-			this.path = this.path.slice(1);
 
 			// Any treasure?
         	var treasure = this.treasure[blockCellPos[1]][blockCellPos[0]]
@@ -50,45 +41,6 @@
 		tick: function () { return true; },
 
 		ticka: function (camera, player) {
-
-			/*
-			// Mouse handling here.
-			if (Ω.input.pressed("moused")) {
-				this.drawing = true;
-				this.path = [];
-				this.pathStarted = false;
-				this.hoverCell = null;
-			}
-
-			if (Ω.input.released("moused")) {
-				this.drawing = false;
-			}
-
-			let target = [Math.max(0, camera.x) + Ω.input.mouse.x, Math.max(0, camera.y + Ω.input.mouse.y)];
-			let targetBlock = this.map.getBlockCell(target);
-			let targetPixels = this.map.getCellPixels(targetBlock);
-			if (this.drawing) {
-				let last = this.path.length === 0 ? false : this.path[this.path.length - 1];
-				if (!last || targetPixels[0] !== last[0] || targetPixels[1] !== last[1]) {
-					this.path.push(targetPixels);
-				}
-			} else {
-				this.hoverCell = targetPixels;
-			}
-
-			var speed = this.drawing ? 2 : 4;
-
-			if (Ω.input.isDown("left")) {
-			    this.pos.x -= speed;
-			} else if (Ω.input.isDown("right")) {
-			    this.pos.x += speed;
-			}
-			if (Ω.input.isDown("up")) {
-			    this.pos.y -= speed;
-			} else if (Ω.input.isDown("down")) {
-			    this.pos.y += speed;
-			}
-			*/
 
 			let targetBlock = this.map.getBlockCell([player.x, player.y + 24]);
 			let targetPixels = this.map.getCellPixels(targetBlock);
@@ -107,8 +59,6 @@
 			this.width = width;
 			this.length = length;
 
-
-
 			var cells = [],
 				treasure = [];
 
@@ -122,7 +72,7 @@
 					}
 					else {
 						cells[j][i] = Ω.utils.rand(4) + 1;
-						if (Ω.utils.oneIn(10)) {
+						if (Ω.utils.oneIn(20)) {
 							treasure[j][i] = Ω.utils.rand(3) + 1;
 						}
 					}
@@ -139,17 +89,6 @@
 		render: function (gfx) {
 
 			var c = gfx.ctx;
-
-
-
-			/*this.path.forEach(function (dot) {
-
-				//c.fillRect(dot[0], dot[1], 10,10);
-				c.beginPath();
-				c.arc(dot[0] + 15, dot[1] + 15, 5, 0, Math.PI * 2, false);
-				c.fill();
-
-			});*/
 
 			if (this.hoverCell) {
 				c.strokeStyle = "rgba(0, 0, 0, 0.2)";

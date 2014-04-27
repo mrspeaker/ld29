@@ -41,17 +41,11 @@
                 this.state.set("IDLE");
                 break;
             case "IDLE":
-                //if (this.beach.path.length) {
-                    this.state.set("LOOKING");
-                //}
+                this.state.set("LOOKING");
                 break;
             case "LOOKING":
                 if (this.state.first()) {
                     this.anims.set("walk");
-                }
-                if (this.beach.path.length === 0) {
-                //    this.state.set("IDLE");
-                } else {
                 }
                 this.tick_LOOKING();
                 break;
@@ -96,32 +90,8 @@
 
             var xo = 0,
                 yo = 0,
-                target = this.beach.path[0],
                 speed = this.detecting ? this.speed.detect : this.speed.move;
 
-
-            /*if (Math.abs(target[0] - this.x) > 5) {
-                if (target[0] - this.x < 5) { xo -= speed; }
-                else if (target[0] - this.x > 5) { xo += speed; }
-            } else
-            if (Math.abs(target[1] - this.y) > 5) {
-                if (target[1] - this.y < 5) { yo -= speed; }
-                else if (target[1] - this.y > 5) { yo += speed; }
-            }
-
-            if (!(xo || yo)) {
-
-                var gets = this.beach.search();
-                if (gets) {
-                    this.state.set("DIGGING", {treasure: gets});
-                    return true;
-                }
-
-                if (this.beach.path.length === 0) {
-                    this.state.set("IDLE");
-                }
-            }
-            */
             if (Ω.input.isDown("left")) {
                 xo -= speed;
             }
@@ -135,7 +105,6 @@
                 yo += speed;
             }
 
-
             this.x += xo;
             this.y += yo;
 
@@ -144,13 +113,13 @@
             }
 
             if (this.detecting) {
+                // TODO: searches every frame... not just once.
                 var gets = this.beach.search(this);
                 if (gets) {
                     this.state.set("DIGGING", {treasure: gets});
                     return true;
                 }
             }
-
 
             return true;
         },
