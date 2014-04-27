@@ -177,7 +177,7 @@
 			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
 
 			this.sunbathers = [];
-			for (let i = 0; i < 10; i++) {
+			for (let i = 0; i < 20; i++) {
 
 				let found = false;
 				var xo, yo;
@@ -187,10 +187,8 @@
 					xo = Ω.math.snap(Ω.utils.rand(this.w), 32);
 					yo = Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32;
 
-					//console.log(this.map.getBlock([xo, yo]), this.map.getBlock([xo, yo + this.sheet.cellH]));
-
 					if (this.map.getBlock([xo, yo]) < this.map.walkable &&
-						this.map.getBlock([xo, yo + this.sheet.cellH < this.map.walkable])) {
+						this.map.getBlock([xo, yo + 32]) < this.map.walkable) {
 						found = true;
 					}
 

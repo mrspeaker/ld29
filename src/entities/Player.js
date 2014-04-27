@@ -225,7 +225,7 @@
         },
 
         drink: function () {
-            if (!this.drinkOk) {
+            if (!this.drinkOk && this.cash >= 1) {
                 return;
             }
 
