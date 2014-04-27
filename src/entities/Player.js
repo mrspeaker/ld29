@@ -6,6 +6,8 @@
         w: 24,
         h: 20,
 
+        center: null,
+
         speed: {
             detect: 2,
             move: 3
@@ -32,6 +34,11 @@
                 new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
                 new Ω.Anim("rockout", this.sheet, 120, [[2, 1], [3, 1]])
             ]);
+
+            this.center = {
+                x: this.w / 2,
+                y: this.h / 2
+            }
 
             this.state = new Ω.utils.State("BORN");
 
@@ -185,7 +192,9 @@
 
             this.anims.render(gfx, this.x, this.y - 16);
 
-            /*c.strokeStyle = "#f00";
+            /*c.strokeStyle = "#000";
+            c.fillStyle = "#000";
+            c.fillRect(this.x + this.center.x - 1, this.y + this.center.y - 1, 2, 2);
             c.strokeRect(this.x, this.y, this.w, this.h);*/
 
         }

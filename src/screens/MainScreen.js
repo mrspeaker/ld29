@@ -62,7 +62,7 @@
                 break;
             case "DAY":
                 this.curTime++;
-                if (this.curTime / 200 > 8) {
+                if (this.curTime / 2000 > 8) {
                     // Day over.
                     this.state.set("SUNSET");
                 } else {
