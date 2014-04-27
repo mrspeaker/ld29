@@ -73,7 +73,7 @@
                 if (this.state.first()) {
                     this.cashcashmoney += this.player.cash;
                     this.player.cash = 0;
-                    window.game.setDialog(new window.PopupDialog("Day is done."));
+                    window.game.setDialog(new window.PopupDialog("day is done."));
 
                 }
                 if (this.state.count > 10) {

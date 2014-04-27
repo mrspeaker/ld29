@@ -22,6 +22,8 @@
                 "dig": 88
             });
 
+             Ω.utils.colors.set("c64");
+
         },
 
         load: function () {
