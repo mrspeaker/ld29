@@ -22,7 +22,7 @@
 
             this.clear(gfx, "hsl(198, 68%, 52%)");
 
-            this.font.render(gfx, "metal meter simulator", Ω.env.w * 0.5 - 150, Ω.env.h / 2 - 8);
+            this.font.render(gfx, "metal meter madness", Ω.env.w * 0.5 - 150, Ω.env.h / 2 - 8);
 
         }
 

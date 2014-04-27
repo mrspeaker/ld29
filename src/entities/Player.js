@@ -24,7 +24,7 @@
             this.screen = screen;
             this.anims = new Ω.Anims([
                 new Ω.Anim("walk", this.sheet, 200, [[0, 0], [1, 0]]),
-                new Ω.Anim("detect", this.sheet, 200, [[0, 0], [1, 0]]),
+                new Ω.Anim("detect", this.sheet, 200, [[2, 0], [3, 0], [4, 0], [3, 0]]),
                 new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
                 new Ω.Anim("rockout", this.sheet, 120, [[0, 1], [0, 10]])
             ]);
@@ -77,9 +77,11 @@
 
             if (Ω.input.pressed("fire")) {
                 this.detecting = true;
+                this.anims.set("detect");
             }
             if (Ω.input.released("fire")) {
                 this.detecting = false;
+                this.anims.set("walk");
             }
 
             return true;
@@ -108,7 +110,7 @@
             this.x += xo;
             this.y += yo;
 
-            if (xo  || yo) {
+            if (this.detecting || xo || yo) {
                 this.anims.tick();
             }
 
