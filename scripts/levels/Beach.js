@@ -21,18 +21,18 @@
 
 		},
 
-		search: function (player) {
+		search: function (player, removeIfFound) {
         	var blockPixPos = [player.x, player.y + 24];
         	var blockCellPos = this.map.getBlockCell(blockPixPos);
         	var blockType = this.map.getBlock(blockPixPos);
         	// Dodgy hack: if on first line == not searched
-        	if (blockType  < this.sheet.cellW) {
+        	if (blockType < this.sheet.cellW) {
         		this.map.setBlock(blockPixPos, blockType + this.sheet.cellW);
         	}
 
 			// Any treasure?
         	var treasure = this.treasure[blockCellPos[1]][blockCellPos[0]]
-        	if (treasure) {
+        	if (treasure && removeIfFound) {
         		this.treasure[blockCellPos[1]][blockCellPos[0]] = 0;
         	}
         	return treasure;

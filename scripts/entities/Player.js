@@ -8,7 +8,7 @@
 
         speed: {
             detect: 2,
-            move: 2.5
+            move: 3.5
         },
 
         sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
@@ -116,7 +116,16 @@
                 // TODO: searches every frame... not just once.
                 var gets = this.beach.search(this);
                 if (gets) {
-                    this.state.set("DIGGING", {treasure: gets});
+                    this.add(new window.Blip(this.x, this.y));
+                }
+            }
+
+            // Better if it was "isdown" and abort when
+            if (Ω.input.pressed("dig")) {
+                // TODO: searches every frame... not just once.
+                var gets$0 = this.beach.search(this, true);
+                if (gets$0) {
+                    this.state.set("DIGGING", {treasure: gets$0});
                     return true;
                 }
             }

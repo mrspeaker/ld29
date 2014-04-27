@@ -18,7 +18,8 @@
                 "up": ["up", "w"],
                 "down": ["down", "s"],
                 "moused": "mouse1",
-                "fire": ["space", "touch", "mouse1"]
+                "fire": ["space", "touch", "mouse1"],
+                "dig": 88
             });
 
         },
