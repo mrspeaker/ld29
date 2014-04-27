@@ -9,7 +9,7 @@
 		hoverCell: null,
 		walkableSandCells: null,
 
-		init: function (width, length) {
+		init: function (width, length, env) {
 
 			this.walkableSandCells = this.sheet.cellW * 2;
 
@@ -36,6 +36,8 @@
             	this.map.cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
             	this.map.cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
             });
+
+            this.env = env;
 
 		},
 
@@ -76,7 +78,7 @@
 
 		//tick: function () { return true; },
 
-		tick: function (camera) {
+		tick: function () {
 
 			let player = this.player;
 
@@ -87,8 +89,8 @@
 			this.pos.x = player.x - (Ω.env.w / 2) + 24;
             this.pos.y = player.y - (Ω.env.h / 2);
 
-			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - camera.w);
-			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - camera.h);
+			this.pos.x = Math.min(Math.max(0, this.pos.x), this.map.w - this.env.w);
+			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - this.env.h);
 
 			return true;
 
