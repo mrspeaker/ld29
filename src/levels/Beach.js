@@ -14,14 +14,12 @@
 			this.walkableSandCells = this.sheet.cellW * 2;
 
 			this.env = env;
-			this.cellW = width;
-			this.cellL = length;
 
-			this.reset();
+			this.reset(width, length);
 
 		},
 
-		reset: function () {
+		reset: function (w, h) {
 
 			if (this.sunbathers) {
 				this.sunbathers.forEach((sb) => {
@@ -29,7 +27,7 @@
 				});
 			}
 
-			var map = this.generateMap(this.cellW, this.cellL);
+			var map = this.generateMap(w, h);
 			this.map = map.map;
 			this.treasure = map.treasure;
 
@@ -53,13 +51,19 @@
 				this.map.cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
 			});
 
+			this.toDig = 0;
 			// Do some A* path findin'
 			var cells = this.map.cells.map((r) => {
 				// Map the level grid to 1's and 0's
 				return r.map((c) => {
-					return c > this.map.walkable ? 1 : 0;
+					var cell = c > this.map.walkable ? 1 : 0
+					if (cell === 0) {
+						this.toDig++;
+					}
+					return cell;
 				});
 			});
+
 			this.graph = new Ω.Math.aStar.Graph(cells);
 
 
@@ -76,6 +80,7 @@
 			// Dodgy hack: if on first line == not searched
 
 			if (!removeIfFound && blockType < this.sheet.cellW) {
+				this.toDig--;
 				this.map.setBlock(blockPixPos, blockType + this.sheet.cellW);
 			}
 
@@ -96,7 +101,7 @@
 			//var blockType = this.map.getBlock(blockPixPos);
 			// Dodgy hack: if on first line == not searched
 			//if (blockType < this.sheet.cellW) {
-				this.map.setBlock(blockPixPos, this.sheet.cellW + 6 + stage);
+			this.map.setBlock(blockPixPos, this.sheet.cellW + 6 + stage);
 			//}
 
 		},
@@ -159,6 +164,13 @@
 					}
 				}
 			}
+
+			let x = width / 2 - 1 | 0;
+			let y = length / 2 - 1 | 0;
+			cells[y][x] = 2 * this.sheet.cellW + 6;
+			cells[y][x + 1] = 2 * this.sheet.cellW + 7;
+			cells[y + 1][x] = 3 * this.sheet.cellW + 6;
+			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 7;
 
 			return {
 				map: new Ω.Map(this.sheet, cells, this.walkableSandCells),

@@ -29,14 +29,14 @@
                 h:Ω.env.h - 100
             };
 
-            this.beach = this.add(new window.Beach(40, 10, env));
+            this.beach = this.add(new window.Beach(22, 8, env));
             this.add(this.beach.map, "map", 1);
-            this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.2, this));
+            this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.15, this));
             this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 100);
 
             this.beach.setPlayer(this.player);
 
-            this.cop = this.add(new window.SurfPatrol(Ω.env.w, 10, this));
+            this.cop = this.add(new window.SurfPatrol(Ω.env.w-64, 10, this));
 
             this.state = new Ω.utils.State("BORN");
 
@@ -81,6 +81,16 @@
                     this.reset();
                 }
                 break;
+            case "CLEARED":
+                if (this.state.first()) {
+                    window.game.setDialog(new window.PopupDialog("level clear!"));
+                }
+                if (this.state.count > 10) {
+                    this.state.set("DAYBREAK");
+                    this.reset();
+                }
+                break;
+
             case "GAMEOVER":
                 window.game.reset();
                 break;
@@ -99,6 +109,10 @@
 
             if (this.cop.state.is("CHASE")) {
                 Ω.Physics.checkCollision(this.player, [this.cop]);
+            }
+
+            if (this.beach.toDig === 0) {
+                this.state.set("CLEARED");
             }
         },
 
