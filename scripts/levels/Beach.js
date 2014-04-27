@@ -161,30 +161,53 @@
 
 		},
 
-		generateBeachPeeps: function () {var this$0 = this;
+		generateBeachPeeps: function () {
 
 			var cells = this.map.cells;
 
-			this.sunbathers = (function(){function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;if(typeof v==='object'&&typeof v['@@iterator']==='function')return v['@@iterator']();}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;var $result$0 = [], x;$D$3 = ([1,2,3,4,5,6,7,8,9]);$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for(; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){x = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);{$result$0.push(this.add(new window.BeachBum(
-				Ω.math.snap(Ω.utils.rand(this.w), 32),
-				Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
-				Ω.utils.rand(2)
-			), "extras", 2))}};;return $result$0}).call(this);
-
-			this.sunbathers.forEach(function(b)  {
-				var cell = this$0.map.getBlockCell([b.x, b.y]);
-				cells[cell[1]][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
-				cells[cell[1] + 1][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
-			});
 
 			var x = this.map.cellW / 2 - 1 | 0;
 			var y = this.map.cellH / 2 - 1 | 0;
+
+			this.stand = this.add(new window.BeerStand(x * this.sheet.w, y * this.sheet.h));
+
 			cells[y][x] = 2 * this.sheet.cellW + 8;
 			cells[y][x + 1] = 2 * this.sheet.cellW + 9;
 			cells[y + 1][x] = 3 * this.sheet.cellW + 8;
 			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
 
-			this.stand = this.add(new window.BeerStand(x * this.sheet.w, y * this.sheet.h));
+			this.sunbathers = [];
+			for (var i = 0; i < 10; i++) {
+
+				var found = false;
+				var xo, yo;
+
+				while(!found) {
+
+					xo = Ω.math.snap(Ω.utils.rand(this.w), 32);
+					yo = Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32;
+
+					//console.log(this.map.getBlock([xo, yo]), this.map.getBlock([xo, yo + this.sheet.cellH]));
+
+					if (this.map.getBlock([xo, yo]) < this.map.walkable &&
+						this.map.getBlock([xo, yo + this.sheet.cellH < this.map.walkable])) {
+						found = true;
+					}
+
+				}
+
+				var sunbather = this.add(
+					new window.BeachBum(
+						xo,
+						yo,
+						Ω.utils.rand(2)
+					), "extras", 2);
+				this.sunbathers.push(sunbather);
+
+				var cell = this.map.getBlockCell([sunbather.x, sunbather.y]);
+				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+			}
 
 		},
 

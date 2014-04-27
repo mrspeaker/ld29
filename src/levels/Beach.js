@@ -165,26 +165,49 @@
 
 			let cells = this.map.cells;
 
-			this.sunbathers = [this.add(new window.BeachBum(
-				Ω.math.snap(Ω.utils.rand(this.w), 32),
-				Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
-				Ω.utils.rand(2)
-			), "extras", 2) for (x of [1,2,3,4,5,6,7,8,9])];
-
-			this.sunbathers.forEach((b) => {
-				var cell = this.map.getBlockCell([b.x, b.y]);
-				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
-				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
-			});
 
 			let x = this.map.cellW / 2 - 1 | 0;
 			let y = this.map.cellH / 2 - 1 | 0;
+
+			this.stand = this.add(new window.BeerStand(x * this.sheet.w, y * this.sheet.h));
+
 			cells[y][x] = 2 * this.sheet.cellW + 8;
 			cells[y][x + 1] = 2 * this.sheet.cellW + 9;
 			cells[y + 1][x] = 3 * this.sheet.cellW + 8;
 			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
 
-			this.stand = this.add(new window.BeerStand(x * this.sheet.w, y * this.sheet.h));
+			this.sunbathers = [];
+			for (let i = 0; i < 10; i++) {
+
+				let found = false;
+				var xo, yo;
+
+				while(!found) {
+
+					xo = Ω.math.snap(Ω.utils.rand(this.w), 32);
+					yo = Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32;
+
+					//console.log(this.map.getBlock([xo, yo]), this.map.getBlock([xo, yo + this.sheet.cellH]));
+
+					if (this.map.getBlock([xo, yo]) < this.map.walkable &&
+						this.map.getBlock([xo, yo + this.sheet.cellH < this.map.walkable])) {
+						found = true;
+					}
+
+				}
+
+				let sunbather = this.add(
+					new window.BeachBum(
+						xo,
+						yo,
+						Ω.utils.rand(2)
+					), "extras", 2);
+				this.sunbathers.push(sunbather);
+
+				var cell = this.map.getBlockCell([sunbather.x, sunbather.y]);
+				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+			}
 
 		},
 
