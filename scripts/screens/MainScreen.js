@@ -10,6 +10,8 @@
         autoTick: false,
         curTime: 0,
 
+        cashcashmoney: 0,
+
         init: function () {
 
             this.reset();
@@ -69,6 +71,7 @@
                 break;
             case "SUNSET":
                 if (this.state.first()) {
+                    this.cashcashmoney += this.player.cash;
                     window.game.setDialog(new window.PopupDialog("Day is done."));
 
                 }
@@ -116,7 +119,7 @@
             c.fillStyle = "hsl(200, 40%, 20%)";
             c.fillRect(0, top, Ω.env.w, 100);
 
-            this.font.render(gfx, "cash: $" + this.player.cash, 16, top + 16);
+            this.font.render(gfx, "cash: $" + (this.cashcashmoney + this.player.cash), 16, top + 16);
             this.font.render(gfx, "time: " + (this.curTime | 0), 16, top + 36);
 
         }
