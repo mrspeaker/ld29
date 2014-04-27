@@ -160,6 +160,11 @@
 
             if (xm || ym) {
                 this.anims.tick();
+
+                // Constrain to beach.
+                if (this.x < 0) this.x = 0;
+                if (this.x > this.beach.w - this.w) this.x = this.beach.w - this.w;
+                if (this.y > this.beach.h - this.h) this.y = this.beach.h - this.h;
             }
 
             // TODO: searches every frame... not just once.
