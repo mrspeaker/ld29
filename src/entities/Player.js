@@ -4,7 +4,7 @@
 
     var Player = Ω.Entity.extend({
         w: 24,
-        h: 32,
+        h: 24,
 
         speed: {
             detect: 2,
@@ -53,7 +53,7 @@
                 break;
             case "LOOKING":
                 if (this.state.first()) {
-                    this.anims.set(`walk${ this.dir === DIRS.up ? "Up" : "Down"}`);
+                    this.anims.set(`detect${ this.dir === DIRS.up ? "Up" : "Down"}`);
                 }
                 this.tick_LOOKING();
                 break;
@@ -75,7 +75,7 @@
                 if (this.state.count === 40) {
                     this.beach.dig(this, 3);
                 }
-                if (Ω.input.released("dig")) {
+                if (Ω.input.released("fire")) {
                     this.digging = false;
                     this.state.set("LOOKING");
                 } else if (this.state.count > 50) {
@@ -106,6 +106,7 @@
                 break;
             }
 
+            /*
             if (Ω.input.pressed("fire")) {
                 this.detecting = true;
                 this.anims.set(`detect${ this.dir === DIRS.up ? "Up" : "Down"}`);
@@ -113,7 +114,7 @@
             if (Ω.input.released("fire")) {
                 this.detecting = false;
                 this.anims.set(`walk${ this.dir === DIRS.up ? "Up" : "Down"}`);
-            }
+            }*/
 
             return true;
 
@@ -125,7 +126,7 @@
                 yo = 0,
                 speed = this.detecting ? this.speed.detect : this.speed.move;
 
-            if (!this.digging) {
+            //if (!this.digging) {
                 if (Ω.input.isDown("left")) {
                     xo -= speed;
                 }
@@ -141,33 +142,38 @@
                     yo += speed;
                 }
 
+                if (xo !== 0 && yo !== 0) {
+                    xo /= Math.sqrt(2);
+                    yo /= Math.sqrt(2);
+                }
+
                 if (Ω.input.pressed("up")) {
-                    this.anims.set(this.detecting ? "detectUp" : "walkUp");
+                    this.anims.set("detectUp");
                 }
                 if (Ω.input.pressed("down")) {
-                    this.anims.set(this.detecting ? "detectDown" : "walkDown");
+                    this.anims.set("detectDown");
                 }
-            }
+            //}
 
             this.move(xo, yo, this.beach.map);
 
             //this.x += xo;
             //this.y += yo;
 
-            if (this.detecting || xo || yo) {
+            //if (this.detecting || xo || yo) {
                 this.anims.tick();
-            }
+            //}
 
-            if (this.detecting) {
+            //if (this.detecting) {
                 // TODO: searches every frame... not just once.
                 let gets = this.beach.search(this);
                 if (gets) {
                     this.add(new window.Blip(this.x, this.y));
                 }
-            }
+            //}
 
             // Better if it was "isdown" and abort when
-            if (Ω.input.pressed("dig")) {
+            if (Ω.input.pressed("fire")) {
                 // TODO: searches every frame... not just once.
                 let gets = this.beach.search(this, false);
                 if (gets) {
@@ -190,6 +196,9 @@
             var c = gfx.ctx;
 
             this.anims.render(gfx, this.x, this.y);
+
+            c.strokeStyle = "#f00";
+            c.strokeRect(this.x, this.y, this.w, this.h);
 
         }
 
