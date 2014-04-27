@@ -19,7 +19,13 @@
 
         dir: DIRS.up,
 
+        lastDrink: 0,
+        drinkOk: false,
+
         cash: 0,
+
+        hydration: 100,
+        dehydrate: 0.1, // (geddit? dehyd...rate!)
 
         init: function (x, y, screen) {
 
@@ -106,9 +112,24 @@
                     this.state.set("LOOKING");
                 }
                 break;
+            case "DRINKING":
+                if (this.state.first()) {
+                    this.cash -= 1;
+                }
+                if (this.state.count > 60) {
+                    this.hydration = Math.min(100, this.hydration + 60);
+
+                    this.state.set("LOOKING");
+                }
+                break;
             case "CAPTURED":
                 if (this.state.count > 100) {
-                    this.screen.captured();
+                    this.screen.gameover("CAPTURED");
+                }
+                break;
+            case "DEHYDRATED":
+                if (this.state.count > 100) {
+                    this.screen.gameover("DEHYDRATED");
                 }
                 break;
             }
@@ -178,8 +199,20 @@
                 let gets = this.beach.search(this, false);
                 if (gets) {
                     this.state.set("DIGGING", {treasure: gets});
+                    this.drinkOk = false;
                     return true;
+                } else {
+                    this.drinkOk = true;
                 }
+            } else {
+                if (Ω.input.isDown("fire")) {
+                    Ω.Physics.checkCollision(this, [this.beach.stand], "drink");
+                }
+            }
+
+            this.hydration -= this.dehydrate;
+            if (this.hydration < 0) {
+                this.state.set("DEHYDRATED");
             }
 
             return true;
@@ -188,6 +221,18 @@
         hit: function () {
             if (this.state.isNot("CAPTURED")) {
                 this.state.set("CAPTURED");
+            }
+        },
+
+        drink: function () {
+            if (!this.drinkOk) {
+                return;
+            }
+
+            var now = Ω.utils.now();
+            if (now - this.lastDrink > 300) {
+                this.state.set("DRINKING");
+                this.lastDrink = now;
             }
         },
 

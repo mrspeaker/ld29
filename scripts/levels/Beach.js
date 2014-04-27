@@ -30,26 +30,15 @@
 			var map = this.generateMap(w, h);
 			this.map = map.map;
 			this.treasure = map.treasure;
-
 			this.w = this.map.w;
 			this.h = this.map.h;
+
+			this.generateBeachPeeps();
 
 			this.pos = {
 				x: Ω.env.w / 2,
 				y: 0
 			};
-
-			this.sunbathers = (function(){function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;if(typeof v==='object'&&typeof v['@@iterator']==='function')return v['@@iterator']();}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;var $result$0 = [], x;$D$3 = ([1,2,3,4,5,6,7,8,9]);$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for(; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){x = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);{$result$0.push(this.add(new window.BeachBum(
-				Ω.math.snap(Ω.utils.rand(this.w), 32),
-				Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
-				Ω.utils.rand(2)
-			), "extras", 2))}};;return $result$0}).call(this);
-
-			this.sunbathers.forEach(function(b)  {
-				var cell = this$0.map.getBlockCell([b.x, b.y]);
-				this$0.map.cells[cell[1]][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
-				this$0.map.cells[cell[1] + 1][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
-			});
 
 			this.toDig = 0;
 			// Do some A* path findin'
@@ -165,17 +154,37 @@
 				}
 			}
 
-			var x = width / 2 - 1 | 0;
-			var y = length / 2 - 1 | 0;
-			cells[y][x] = 2 * this.sheet.cellW + 6;
-			cells[y][x + 1] = 2 * this.sheet.cellW + 7;
-			cells[y + 1][x] = 3 * this.sheet.cellW + 6;
-			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 7;
-
 			return {
 				map: new Ω.Map(this.sheet, cells, this.walkableSandCells),
 				treasure: treasure
 			};
+
+		},
+
+		generateBeachPeeps: function () {var this$0 = this;
+
+			var cells = this.map.cells;
+
+			this.sunbathers = (function(){function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;if(typeof v==='object'&&typeof v['@@iterator']==='function')return v['@@iterator']();}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;var $result$0 = [], x;$D$3 = ([1,2,3,4,5,6,7,8,9]);$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for(; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){x = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);{$result$0.push(this.add(new window.BeachBum(
+				Ω.math.snap(Ω.utils.rand(this.w), 32),
+				Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
+				Ω.utils.rand(2)
+			), "extras", 2))}};;return $result$0}).call(this);
+
+			this.sunbathers.forEach(function(b)  {
+				var cell = this$0.map.getBlockCell([b.x, b.y]);
+				cells[cell[1]][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
+				cells[cell[1] + 1][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
+			});
+
+			var x = this.map.cellW / 2 - 1 | 0;
+			var y = this.map.cellH / 2 - 1 | 0;
+			cells[y][x] = 2 * this.sheet.cellW + 8;
+			cells[y][x + 1] = 2 * this.sheet.cellW + 9;
+			cells[y + 1][x] = 3 * this.sheet.cellW + 8;
+			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
+
+			this.stand = this.add(new window.BeerStand(x * this.sheet.w, y * this.sheet.h));
 
 		},
 

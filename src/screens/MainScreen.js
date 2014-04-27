@@ -95,7 +95,12 @@
                 break;
 
             case "GAMEOVER":
-                window.game.reset();
+                window.game.setScreen(
+                    new window.GameOverScreen(
+                        this.state.data.manner,
+                        this.cashcashmoney + this.player.cash
+                    )
+                );
                 break;
             }
 
@@ -119,8 +124,8 @@
             }
         },
 
-        captured: function () {
-            this.state.set("GAMEOVER");
+        gameover: function (manner) {
+            this.state.set("GAMEOVER", {manner: manner});
         },
 
         render: function (gfx) {
@@ -136,13 +141,12 @@
 
 
             this.horizon.render(gfx, 0, - this.camera.y - 90);
-            console.log(this.camera.y)
             //c.fillStyle = "hsl(200, 40%, 20%)";
             //c.fillRect(0, top, Ω.env.w, 100);
             this.hud.render(gfx, 0, top - 20);
 
             this.font.render(gfx, "cash: $" + (this.cashcashmoney + this.player.cash), 16, top + 16);
-            this.font.render(gfx, "time: " + (this.curTime / 200 | 0), 16, top + 36);
+            this.font.render(gfx, "hydration: " + (this.player.hydration | 0) + "%", 16, top + 36);
 
         }
 

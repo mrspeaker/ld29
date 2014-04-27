@@ -14,7 +14,7 @@
 
         tick: function () {
 
-        	if (this.frame > 160) {
+        	if (this.frame > 40 && Ω.input.pressed("fire")) {
         		window.game.setScreen(new window.MainScreen());
         	}
 

@@ -30,26 +30,15 @@
 			var map = this.generateMap(w, h);
 			this.map = map.map;
 			this.treasure = map.treasure;
-
 			this.w = this.map.w;
 			this.h = this.map.h;
+
+			this.generateBeachPeeps();
 
 			this.pos = {
 				x: Ω.env.w / 2,
 				y: 0
 			};
-
-			this.sunbathers = [this.add(new window.BeachBum(
-				Ω.math.snap(Ω.utils.rand(this.w), 32),
-				Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
-				Ω.utils.rand(2)
-			), "extras", 2) for (x of [1,2,3,4,5,6,7,8,9])];
-
-			this.sunbathers.forEach((b) => {
-				var cell = this.map.getBlockCell([b.x, b.y]);
-				this.map.cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
-				this.map.cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
-			});
 
 			this.toDig = 0;
 			// Do some A* path findin'
@@ -165,17 +154,37 @@
 				}
 			}
 
-			let x = width / 2 - 1 | 0;
-			let y = length / 2 - 1 | 0;
-			cells[y][x] = 2 * this.sheet.cellW + 6;
-			cells[y][x + 1] = 2 * this.sheet.cellW + 7;
-			cells[y + 1][x] = 3 * this.sheet.cellW + 6;
-			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 7;
-
 			return {
 				map: new Ω.Map(this.sheet, cells, this.walkableSandCells),
 				treasure: treasure
 			};
+
+		},
+
+		generateBeachPeeps: function () {
+
+			let cells = this.map.cells;
+
+			this.sunbathers = [this.add(new window.BeachBum(
+				Ω.math.snap(Ω.utils.rand(this.w), 32),
+				Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32,
+				Ω.utils.rand(2)
+			), "extras", 2) for (x of [1,2,3,4,5,6,7,8,9])];
+
+			this.sunbathers.forEach((b) => {
+				var cell = this.map.getBlockCell([b.x, b.y]);
+				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+			});
+
+			let x = this.map.cellW / 2 - 1 | 0;
+			let y = this.map.cellH / 2 - 1 | 0;
+			cells[y][x] = 2 * this.sheet.cellW + 8;
+			cells[y][x + 1] = 2 * this.sheet.cellW + 9;
+			cells[y + 1][x] = 3 * this.sheet.cellW + 8;
+			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
+
+			this.stand = this.add(new window.BeerStand(x * this.sheet.w, y * this.sheet.h));
 
 		},
 
