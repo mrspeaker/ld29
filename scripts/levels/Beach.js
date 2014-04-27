@@ -53,6 +53,16 @@
 				this$0.map.cells[cell[1] + 1][cell[0]] = this$0.walkableSandCells + this$0.sheet.cellW + 1;
 			});
 
+			// Do some A* path findin'
+			var cells = this.map.cells.map(function(r)  {
+				// Map the level grid to 1's and 0's
+				return r.map(function(c)  {
+					return c > this$0.map.walkable ? 1 : 0;
+				});
+			});
+			this.graph = new Ω.Math.aStar.Graph(cells);
+
+
 		},
 
 		setPlayer: function (player) {
@@ -108,6 +118,20 @@
 			this.pos.y = Math.min(Math.max(-80, this.pos.y), this.map.h - this.env.h);
 
 			return true;
+
+		},
+
+		findPlayer: function (e) {
+
+			var w = this.map.sheet.w;
+			var h = this.map.sheet.h;
+
+			// Recompute A*
+			return Ω.Math.aStar.search(
+				this.graph.nodes,
+				this.graph.nodes[e.y / w | 0][e.x / h | 0],
+				this.graph.nodes[this.player.y / w | 0][this.player.x / h | 0]
+			);
 
 		},
 

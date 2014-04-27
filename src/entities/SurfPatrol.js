@@ -8,7 +8,7 @@
 
 		speed: {
 			patrol: 0.5,
-			chase: 0.9
+			chase: 1
 		},
 
 		sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
@@ -28,10 +28,15 @@
 			this.player = screen.player;
 			this.beach = screen.beach;
 
+			this.findPlayer();
 		},
 
 		reset: function () {
 			this.state.set("BORN");
+		},
+
+		findPlayer: function () {
+			this.path = this.beach.findPlayer(this);
 		},
 
 		tick: function () {
@@ -39,7 +44,7 @@
 			this.state.tick();
 			switch (this.state.get()) {
 			case "BORN":
-				this.state.set("PATROL");
+				this.state.set("CHASE");
 				break;
 			case "PATROL":
 				if (Ω.utils.oneIn(200)) {
@@ -49,7 +54,10 @@
 				break;
 			case "CHASE":
 				if (Ω.utils.oneIn(200)) {
-					this.state.set("PATROL");
+					//this.state.set("PATROL");
+				}
+				if (this.state.count % 5 === 0) {
+					this.findPlayer();
 				}
 				this.tick_CHASE();
 				break;
@@ -86,19 +94,23 @@
 
 		tick_CHASE: function () {
 			var xo = 0,
-				yo = 0;
+				yo = 0,
+				w = this.beach.map.sheet.w;
 
-			if (this.player.x < this.x) {
-				xo -= this.speed.chase;
-			}
-			if (this.player.x > this.x) {
-				xo += this.speed.chase;
-			}
-			if (this.player.y > this.y) {
-				yo += this.speed.chase;
-			}
-			if (this.player.y < this.y) {
-				yo -= this.speed.chase;
+			// Move along the a* path
+			if (this.path.length) {
+				if (this.y < this.path[0].x * w) {
+					yo += this.speed.chase;
+				}
+				if (this.y > this.path[0].x * w) {
+					yo -= this.speed.chase;
+				}
+				if (this.x < this.path[0].y * w) {
+					xo += this.speed.chase;
+				}
+				if (this.x > this.path[0].y * w) {
+					xo -= this.speed.chase;
+				}
 			}
 
 			this.move(xo, yo, this.beach.map);
