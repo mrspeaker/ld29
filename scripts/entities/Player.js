@@ -1,4 +1,4 @@
-(function (Ω) {
+(function (Ω, DIRS) {
 
     "use strict";
 
@@ -15,6 +15,8 @@
 
         state: null,
 
+        dir: DIRS.up,
+
         cash: 0,
 
         init: function (x, y, screen) {
@@ -23,8 +25,10 @@
             this.beach = screen.beach;
             this.screen = screen;
             this.anims = new Ω.Anims([
-                new Ω.Anim("walk", this.sheet, 200, [[0, 0], [1, 0]]),
-                new Ω.Anim("detect", this.sheet, 200, [[2, 0], [3, 0], [4, 0], [3, 0]]),
+                new Ω.Anim("walkUp", this.sheet, 200, [[0, 0], [1, 0]]),
+                new Ω.Anim("walkDown", this.sheet, 200, [[8, 0], [9, 0]]),
+                new Ω.Anim("detectUp", this.sheet, 200, [[3, 0], [4, 0], [3, 0], [2, 0]]),
+                new Ω.Anim("detectDown", this.sheet, 200, [[6, 0], [7, 0], [6, 0], [5, 0]]),
                 new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
                 new Ω.Anim("rockout", this.sheet, 120, [[0, 1], [0, 10]])
             ]);
@@ -45,7 +49,7 @@
                 break;
             case "LOOKING":
                 if (this.state.first()) {
-                    this.anims.set("walk");
+                    this.anims.set("walk" + this.dirs === DIRS.up ? "Up" : "Down");
                 }
                 this.tick_LOOKING();
                 break;
@@ -87,11 +91,11 @@
 
             if (Ω.input.pressed("fire")) {
                 this.detecting = true;
-                this.anims.set("detect");
+                this.anims.set("detect" + (this.dir === DIRS.up ? "Up" : "Down"), true);
             }
             if (Ω.input.released("fire")) {
                 this.detecting = false;
-                this.anims.set("walk");
+                this.anims.set("walk" + this.dirs === DIRS.up ? "Up" : "Down");
             }
 
             return true;
@@ -112,10 +116,19 @@
                     xo += speed;
                 }
                 if (Ω.input.isDown("up")) {
+                    this.dir = DIRS.up;
                     yo -= speed;
                 }
                 if (Ω.input.isDown("down")) {
+                    this.dir = DIRS.down;
                     yo += speed;
+                }
+
+                if (Ω.input.pressed("up")) {
+                    this.anims.set(this.detecting ? "detectUp" : "walkUp");
+                }
+                if (Ω.input.pressed("down")) {
+                    this.anims.set(this.detecting ? "detectDown" : "walkDown");
                 }
             }
 
@@ -165,4 +178,4 @@
 
     window.Player = Player;
 
-}(window.Ω));
+}(window.Ω, window.DIRS));
