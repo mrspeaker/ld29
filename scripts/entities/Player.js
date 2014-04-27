@@ -25,10 +25,10 @@
             this.beach = screen.beach;
             this.screen = screen;
             this.anims = new Ω.Anims([
-                new Ω.Anim("walkUp", this.sheet, 200, [[0, 0], [1, 0]]),
-                new Ω.Anim("walkDown", this.sheet, 200, [[8, 0], [9, 0]]),
-                new Ω.Anim("detectUp", this.sheet, 200, [[3, 0], [4, 0], [3, 0], [2, 0]]),
-                new Ω.Anim("detectDown", this.sheet, 200, [[6, 0], [7, 0], [6, 0], [5, 0]]),
+                new Ω.Anim("detectUp", this.sheet, 150, [[3, 0], [4, 0], [3, 0], [2, 0]]),
+                new Ω.Anim("detectDown", this.sheet, 150, [[6, 0], [7, 0], [6, 0], [5, 0]]),
+                new Ω.Anim("detectLeft", this.sheet, 150, [[5, 1], [6, 1], [5, 1], [4, 1]]),
+                new Ω.Anim("detectRight", this.sheet, 150, [[8, 1], [9, 1], [8, 1], [7, 1]]),
                 new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
                 new Ω.Anim("rockout", this.sheet, 120, [[2, 1], [3, 1]])
             ]);
@@ -106,16 +106,6 @@
                 break;
             }
 
-            /*
-            if (Ω.input.pressed("fire")) {
-                this.detecting = true;
-                this.anims.set(`detect${ this.dir === DIRS.up ? "Up" : "Down"}`);
-            }
-            if (Ω.input.released("fire")) {
-                this.detecting = false;
-                this.anims.set(`walk${ this.dir === DIRS.up ? "Up" : "Down"}`);
-            }*/
-
             return true;
 
         },
@@ -126,50 +116,51 @@
                 yo = 0,
                 speed = this.detecting ? this.speed.detect : this.speed.move;
 
-            //if (!this.digging) {
-                if (Ω.input.isDown("left")) {
-                    xo -= speed;
-                }
-                if (Ω.input.isDown("right")) {
-                    xo += speed;
-                }
-                if (Ω.input.isDown("up")) {
-                    this.dir = DIRS.up;
-                    yo -= speed;
-                }
-                if (Ω.input.isDown("down")) {
-                    this.dir = DIRS.down;
-                    yo += speed;
-                }
+            if (Ω.input.isDown("left")) {
+                xo -= speed;
+            }
+            if (Ω.input.isDown("right")) {
+                xo += speed;
+            }
+            if (Ω.input.isDown("up")) {
+                this.dir = DIRS.up;
+                yo -= speed;
+            }
+            if (Ω.input.isDown("down")) {
+                this.dir = DIRS.down;
+                yo += speed;
+            }
 
-                if (xo !== 0 && yo !== 0) {
-                    xo /= Math.sqrt(2);
-                    yo /= Math.sqrt(2);
-                }
+            if (xo !== 0 && yo !== 0) {
+                xo /= Math.sqrt(2);
+                yo /= Math.sqrt(2);
+            }
 
-                if (Ω.input.pressed("up")) {
-                    this.anims.set("detectUp");
-                }
-                if (Ω.input.pressed("down")) {
-                    this.anims.set("detectDown");
-                }
-            //}
+            if (Ω.input.pressed("up")) {
+                this.anims.set("detectUp");
+            }
+            if (Ω.input.pressed("down")) {
+                this.anims.set("detectDown");
+            }
+            if (Ω.input.pressed("left")) {
+                this.anims.set("detectLeft");
+            }
+            if (Ω.input.pressed("right")) {
+                this.anims.set("detectRight");
+            }
 
-            this.move(xo, yo, this.beach.map);
+            var xm = (ym = this.move(xo, yo, this.beach.map))[0], ym = ym[1];
 
-            //if (this.detecting || xo || yo) {
+            if (xm || ym) {
                 this.anims.tick();
-            //}
+            }
 
-            //if (this.detecting) {
-                // TODO: searches every frame... not just once.
-                var gets = this.beach.search(this);
-                if (gets) {
-                    this.add(new window.Blip(this.x, this.y));
-                }
-            //}
+            // TODO: searches every frame... not just once.
+            var gets = this.beach.search(this);
+            if (gets) {
+                this.add(new window.Blip(this.x, this.y));
+            }
 
-            // Better if it was "isdown" and abort when
             if (Ω.input.pressed("fire")) {
                 // TODO: searches every frame... not just once.
                 var gets$0 = this.beach.search(this, false);
