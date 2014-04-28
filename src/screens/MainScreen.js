@@ -9,6 +9,11 @@
         hud: new Ω.Image("res/images/hud.png"),
         horizon: new Ω.Image("res/images/horizon.png"),
 
+        sounds: {
+            tune: new Ω.Sound("res/audio/tune", 0.8, true),
+            dead: new Ω.Sound("res/audio/doh", 1, false)
+        },
+
         state: null,
         autoTick: false,
         curTime: 0,
@@ -55,6 +60,7 @@
                 break;
             case "DAYBREAK":
                 if (this.state.first()) {
+                    this.sounds.tune.stop();
                     this.tick_DAY();
                 }
                 if (this.state.count === 30) {
@@ -64,6 +70,9 @@
                 }
                 break;
             case "DAY":
+                if (this.state.first()) {
+                    this.sounds.tune.play();
+                }
                 this.curTime++;
                 if (this.curTime / 2000 > 8) {
                     // Day over.
@@ -86,6 +95,7 @@
                 break;
             case "CLEARED":
                 if (this.state.first()) {
+                    this.sounds.tune.stop();
                     window.game.setDialog(new window.PopupDialog("level clear!"));
                 }
                 if (this.state.count > 10) {
@@ -122,6 +132,12 @@
             if (this.beach.toDig === 0) {
                 this.state.set("CLEARED");
             }
+        },
+
+
+        predead: function () {
+            this.sounds.tune.stop();
+            this.sounds.dead.play();
         },
 
         gameover: function (manner) {

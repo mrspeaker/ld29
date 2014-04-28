@@ -22,10 +22,16 @@
         lastDrink: 0,
         drinkOk: false,
 
+        lastBlip: 0,
+
         cash: 0,
 
         hydration: 100,
         dehydrate: 0.1, // (geddit? dehyd...rate!)
+
+        sounds: {
+            blip: new Ω.Sound("res/audio/ping", 1, false)
+        },
 
         init: function (x, y, screen) {
 
@@ -190,8 +196,10 @@
 
             // TODO: searches every frame... not just once.
             var gets = this.beach.search(this);
-            if (gets) {
+            if (gets && Ω.utils.now() - this.lastBlip > 30) {
+                this.sounds.blip.play();
                 this.add(new window.Blip(this.x, this.y));
+                this.lastBlip = Ω.utils.now();
             }
 
             if (Ω.input.pressed("fire")) {
@@ -212,6 +220,7 @@
 
             this.hydration -= this.dehydrate;
             if (this.hydration < 0) {
+                this.screen.predead();
                 this.state.set("DEHYDRATED");
             }
 
@@ -220,6 +229,7 @@
 
         hit: function () {
             if (this.state.isNot("CAPTURED")) {
+                this.screen.predead();
                 this.state.set("CAPTURED");
             }
         },
