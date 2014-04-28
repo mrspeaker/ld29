@@ -97,6 +97,10 @@
 				yo = 0,
 				w = this.beach.map.sheet.w;
 
+			if (this.player.state.is("DEHYDRATED")) {
+				return;
+			}
+
 			// Move along the a* path
 			if (this.path.length) {
 				if (this.y < this.path[0].x * w) {

@@ -44,7 +44,22 @@
 
             this.beach.setPlayer(this.player);
 
-            this.cop = this.add(new window.SurfPatrol(Ω.env.w-64, 10, this));
+            var found = false;
+            var xo, yo;
+
+            while(!found) {
+
+                xo = Ω.math.snap(Ω.utils.rand(this.beach.w), 32);
+                yo = Ω.math.snap(Ω.utils.rand(this.beach.h - 96), 32) + 32;
+
+                if (this.beach.map.getBlock([xo, yo]) < this.beach.map.walkable &&
+                    this.beach.map.getBlock([xo, yo + 32]) < this.beach.map.walkable) {
+                    found = true;
+                }
+
+            }
+
+            this.cop = this.add(new window.SurfPatrol(xo, yo, this));
 
             this.state = new Ω.utils.State("BORN");
 
@@ -65,7 +80,7 @@
                 }
                 if (this.state.count === 30) {
                     this.curTime = 0;
-                    window.game.setDialog(new window.PopupDialog("day break!"));
+                    window.game.setDialog(new window.PopupDialog("  dig and drink."));
                     this.state.set("DAY");
                 }
                 break;
@@ -74,14 +89,15 @@
                     this.sounds.tune.play();
                 }
                 this.curTime++;
-                if (this.curTime / 2000 > 8) {
+                //if (this.curTime / 2000 > 8) {
                     // Day over.
-                    this.state.set("SUNSET");
-                } else {
+                //    this.state.set("SUNSET");
+                //} else {
                     this.tick_DAY();
-                }
+                //}
                 break;
             case "SUNSET":
+                // No more "days"... maybe v2.
                 if (this.state.first()) {
                     this.cashcashmoney += this.player.cash;
                     this.player.cash = 0;
@@ -89,17 +105,18 @@
 
                 }
                 if (this.state.count > 10) {
-                    this.state.set("DAYBREAK");
                     this.reset();
                 }
                 break;
             case "CLEARED":
                 if (this.state.first()) {
-                    this.sounds.tune.stop();
+                    Ω.Sound._reset();
+                    this.player.sounds.coin.play();
+                    this.cashcashmoney += this.player.cash;
+                    this.player.cash = 0;
                     window.game.setDialog(new window.PopupDialog("level clear!"));
                 }
-                if (this.state.count > 10) {
-                    this.state.set("DAYBREAK");
+                if (this.state.count === 10) {
                     this.reset();
                 }
                 break;
@@ -136,6 +153,7 @@
 
 
         predead: function () {
+            Ω.Sound._reset();
             this.sounds.tune.stop();
             this.sounds.dead.play();
         },

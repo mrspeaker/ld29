@@ -33,7 +33,7 @@
 			this.w = this.map.w;
 			this.h = this.map.h;
 
-			this.generateBeachPeeps();
+			this.generateBeachPeeps(10);
 
 			this.pos = {
 				x: Ω.env.w / 2,
@@ -161,7 +161,7 @@
 
 		},
 
-		generateBeachPeeps: function () {
+		generateBeachPeeps: function (numsuns) {
 
 			let cells = this.map.cells;
 
@@ -177,7 +177,7 @@
 			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
 
 			this.sunbathers = [];
-			for (let i = 0; i < 20; i++) {
+			for (let i = 0; i < numsuns; i++) {
 
 				let found = false;
 				var xo, yo;

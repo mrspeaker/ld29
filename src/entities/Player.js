@@ -28,9 +28,14 @@
 
         hydration: 100,
         dehydrate: 0.1, // (geddit? dehyd...rate!)
+        hydrationWarning: false,
 
         sounds: {
-            blip: new Ω.Sound("res/audio/ping", 1, false)
+            blip: new Ω.Sound("res/audio/ping", 1, false),
+            cash: new Ω.Sound("res/audio/cashcashmoney", 1, false),
+            coin: new Ω.Sound("res/audio/collect", 1, false),
+            thirsty: new Ω.Sound("res/audio/thirsty", 1, true),
+            click: new Ω.Sound("res/audio/build", 1, false)
         },
 
         init: function (x, y, screen) {
@@ -44,7 +49,8 @@
                 new Ω.Anim("detectLeft", this.sheet, 150, [[5, 1], [6, 1], [5, 1], [4, 1]]),
                 new Ω.Anim("detectRight", this.sheet, 150, [[8, 1], [9, 1], [8, 1], [7, 1]]),
                 new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
-                new Ω.Anim("rockout", this.sheet, 120, [[2, 1], [3, 1]])
+                new Ω.Anim("rockout", this.sheet, 120, [[2, 1], [3, 1]]),
+                new Ω.Anim("beer", this.sheet, 100, [[4, 2], [5, 2]])
             ]);
 
             this.center = {
@@ -111,6 +117,8 @@
             case "ROCKINGOUT":
                 if (this.state.first()) {
                     this.anims.set("rockout");
+                    this.sounds.cash.play();
+                    this.sounds.coin.play();
                     this.cash += this.state.data.treasure;
                 }
                 this.anims.tick();
@@ -121,12 +129,13 @@
             case "DRINKING":
                 if (this.state.first()) {
                     this.cash -= 1;
+                    this.anims.set("beer");
                 }
                 if (this.state.count > 60) {
-                    this.hydration = Math.min(100, this.hydration + 60);
-
+                    this.hydration = Math.min(100, this.hydration + 75);
                     this.state.set("LOOKING");
                 }
+                this.anims.tick();
                 break;
             case "CAPTURED":
                 if (this.state.count > 100) {
@@ -219,6 +228,15 @@
             }
 
             this.hydration -= this.dehydrate;
+            if (!this.hydrationWarning && this.hydration < 20) {
+                this.sounds.thirsty.play();
+                this.hydrationWarning = true;
+            } else if (this.hydrationWarning && this.hydration > 20) {
+                this.sounds.thirsty.stop();
+                this.hydrationWarning = false;
+            }
+
+
             if (this.hydration < 0) {
                 this.screen.predead();
                 this.state.set("DEHYDRATED");
@@ -235,12 +253,19 @@
         },
 
         drink: function () {
-            if (!this.drinkOk && this.cash >= 1) {
+            if (!this.drinkOk) {
                 return;
             }
 
+            if (this.cash < 1) {
+                this.sounds.click.play();
+                return;
+            }
+
+            this.sounds.coin.play();
+
             var now = Ω.utils.now();
-            if (now - this.lastDrink > 300) {
+            if (now - this.lastDrink > 1500) {
                 this.state.set("DRINKING");
                 this.lastDrink = now;
             }

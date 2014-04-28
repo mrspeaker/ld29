@@ -29,14 +29,14 @@
             this.clear(gfx, "hsl(198, 68%, 52%)");
 
             if (this.manner === "CAPTURED") {
-                this.font.render(gfx, "kicked off by the surf patrol.", Ω.env.w * 0.2 - 150, Ω.env.h / 2 - 8);
-                this.font.render(gfx, "and really embarrassed.", Ω.env.w * 0.2 - 150, Ω.env.h / 2 + 10);
+                this.font.render(gfx, "kicked off by the surf patrol.", Ω.env.w * 0.4 - 150, Ω.env.h / 2 - 8);
+                this.font.render(gfx, "and are really embarrassed.", Ω.env.w * 0.4 - 150, Ω.env.h / 2 + 10);
             } else {
-                this.font.render(gfx, "you have gotten really thirsty.", Ω.env.w * 0.2 - 150, Ω.env.h / 2 - 8);
-                this.font.render(gfx, "really really thirsty.", Ω.env.w * 0.2 - 150, Ω.env.h / 2 + 10);
+                this.font.render(gfx, "you have gotten really thirsty.", Ω.env.w * 0.4 - 150, Ω.env.h / 2 - 8);
+                this.font.render(gfx, "really really thirsty.", Ω.env.w * 0.4 - 150, Ω.env.h / 2 + 10);
             }
 
-            this.font.render(gfx, "you earned $" + this.cash, Ω.env.w * 0.5 - 150, Ω.env.h / 2 + 32);
+            this.font.render(gfx, "you earned $" + this.cash, Ω.env.w * 0.5 - 150, Ω.env.h / 2 + 64);
             //this.img.render(gfx, 0, 0);
 
         }
