@@ -26,7 +26,7 @@
 
         },
 
-        reset: function () {
+        reset: function () {var this$0 = this;
 
             this.removeAll();
 
@@ -37,29 +37,26 @@
                 h:Ω.env.h - 64
             };
 
-            this.beach = this.add(new window.Beach(22, 8, env));
-            this.add(this.beach.map, "map", 1);
-            this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.15, this));
             this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 64);
 
-            this.beach.setPlayer(this.player);
+            this.beach = this.add(new window.Beach(env, function()  {
 
-            var found = false;
-            var xo, yo;
+                this$0.add(this$0.beach.map, "map", 1);
+                this$0.player = this$0.add(new window.Player(
+                    this$0.beach.playerSpawn.x,
+                    this$0.beach.playerSpawn.y,
+                    this$0
+                ));
+                this$0.beach.setPlayer(this$0.player);
 
-            while(!found) {
+                this$0.cop = this$0.add(new window.SurfPatrol(
+                    this$0.beach.copSpawn.x,
+                    this$0.beach.copSpawn.y,
+                    this$0
+                ));
 
-                xo = Ω.math.snap(Ω.utils.rand(this.beach.w), 32);
-                yo = Ω.math.snap(Ω.utils.rand(this.beach.h - 96), 32) + 32;
 
-                if (this.beach.map.getBlock([xo, yo]) < this.beach.map.walkable &&
-                    this.beach.map.getBlock([xo, yo + 32]) < this.beach.map.walkable) {
-                    found = true;
-                }
-
-            }
-
-            this.cop = this.add(new window.SurfPatrol(xo, yo, this));
+            }));
 
             this.state = new Ω.utils.State("BORN");
 
@@ -71,7 +68,9 @@
 
             switch (this.state.get()) {
             case "BORN":
-                this.state.set("DAYBREAK");
+                if (this.beach.loaded) {
+                    this.state.set("DAYBREAK");
+                }
                 break;
             case "DAYBREAK":
                 if (this.state.first()) {

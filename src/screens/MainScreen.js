@@ -37,29 +37,26 @@
                 h:Ω.env.h - 64
             };
 
-            this.beach = this.add(new window.Beach(22, 8, env));
-            this.add(this.beach.map, "map", 1);
-            this.player = this.add(new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.15, this));
             this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 64);
 
-            this.beach.setPlayer(this.player);
+            this.beach = this.add(new window.Beach(env, () => {
 
-            let found = false;
-            var xo, yo;
+                this.add(this.beach.map, "map", 1);
+                this.player = this.add(new window.Player(
+                    this.beach.playerSpawn.x,
+                    this.beach.playerSpawn.y,
+                    this
+                ));
+                this.beach.setPlayer(this.player);
 
-            while(!found) {
+                this.cop = this.add(new window.SurfPatrol(
+                    this.beach.copSpawn.x,
+                    this.beach.copSpawn.y,
+                    this
+                ));
 
-                xo = Ω.math.snap(Ω.utils.rand(this.beach.w), 32);
-                yo = Ω.math.snap(Ω.utils.rand(this.beach.h - 96), 32) + 32;
 
-                if (this.beach.map.getBlock([xo, yo]) < this.beach.map.walkable &&
-                    this.beach.map.getBlock([xo, yo + 32]) < this.beach.map.walkable) {
-                    found = true;
-                }
-
-            }
-
-            this.cop = this.add(new window.SurfPatrol(xo, yo, this));
+            }));
 
             this.state = new Ω.utils.State("BORN");
 
@@ -71,7 +68,9 @@
 
             switch (this.state.get()) {
             case "BORN":
-                this.state.set("DAYBREAK");
+                if (this.beach.loaded) {
+                    this.state.set("DAYBREAK");
+                }
                 break;
             case "DAYBREAK":
                 if (this.state.first()) {

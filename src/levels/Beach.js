@@ -6,20 +6,40 @@
 
 		sheet: new Ω.SpriteSheet("res/images/tiles.png", 32),
 
-		hoverCell: null,
 		walkableSandCells: null,
 
-		init: function (width, length, env) {
+		curLevel: null,
+		loaded: false,
+
+		init: function (env, cb) {
+
+			this.load("level01.json", cb);
 
 			this.walkableSandCells = this.sheet.cellW * 2;
-
 			this.env = env;
-
-			this.reset(width, length);
 
 		},
 
-		reset: function (w, h) {
+		load: function (name, cb) {
+
+			this.loaded = false;
+
+			new Ω.Tiled("res/levels/" + name + "?" + Date.now(), (level) => {
+
+				console.log(level);
+
+				this.level = level;
+
+				this.reset(level, level.w, level.h);
+				this.loaded = true;
+
+				cb && cb();
+
+			});
+
+		},
+
+		reset: function (level, w, h) {
 
 			if (this.sunbathers) {
 				this.sunbathers.forEach((sb) => {
@@ -29,11 +49,16 @@
 
 			var map = this.generateMap(w, h);
 			this.map = map.map;
+			this.map.cells = level.layers[0].data;
+
 			this.treasure = map.treasure;
 			this.w = this.map.w;
 			this.h = this.map.h;
 
 			this.generateBeachPeeps(10);
+
+			this.playerSpawn = level.objectByName("spawns", "player_spawn")[0];
+			this.copSpawn = level.objectByName("spawns", "cop_spawn")[0];
 
 			this.pos = {
 				x: Ω.env.w / 2,
@@ -85,25 +110,14 @@
 		},
 
 		dig: function (player, stage) {
-			var blockPixPos = [player.x + player.center.x, player.y + player.center.y];
-			//var blockCellPos = this.map.getBlockCell(blockPixPos);
-			//var blockType = this.map.getBlock(blockPixPos);
-			// Dodgy hack: if on first line == not searched
-			//if (blockType < this.sheet.cellW) {
+			let blockPixPos = [player.x + player.center.x, player.y + player.center.y];
+
 			this.map.setBlock(blockPixPos, this.sheet.cellW + 6 + stage);
-			//}
-
 		},
-
-		//tick: function () { return true; },
 
 		tick: function () {
 
 			let player = this.player;
-
-			let targetBlock = this.map.getBlockCell([player.x + player.center.x, player.y + player.center.y]);
-			let targetPixels = this.map.getCellPixels(targetBlock);
-			this.hoverCell = targetPixels;
 
 			this.pos.x = player.x - (Ω.env.w / 2) + player.center.y;
 			this.pos.y = player.y - (Ω.env.h / 2);
@@ -165,7 +179,6 @@
 
 			let cells = this.map.cells;
 
-
 			let x = this.map.cellW / 2 - 1 | 0;
 			let y = this.map.cellH / 2 - 1 | 0;
 
@@ -209,16 +222,7 @@
 
 		},
 
-		render: function (gfx) {
-
-			var c = gfx.ctx;
-
-			/*if (this.hoverCell) {
-				c.strokeStyle = "rgba(0, 0, 0, 0.2)";
-				c.strokeRect(this.hoverCell[0], this.hoverCell[1], this.sheet.w, this.sheet.h);
-			}*/
-
-		}
+		render: function (gfx) {}
 
 	});
 
