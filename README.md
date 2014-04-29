@@ -1,11 +1,16 @@
-# LD29: by Mr Speaker
+# Metal Meter Simulator: seek your fortune below the surface
 
+by Mr Speaker
 Entry for LD29: http://www.ludumdare.com/compo/2014/04/23/welcome-to-ludum-dare-29er/
+Play here:
 
 # Setup build
 
+	Uses `gulp` to run es6-transpiler to turn ES6 code into ES5 code.
+
 	npm install --save-dev gulp
 	npm install --save-dev gulp-es6-transpiler
+	npm install --save-dev gulp-util
 
 # Build
 
@@ -23,8 +28,6 @@ ES6 options:
 
 
 ## NOtes:
-
-Metal Meter Simulator: seek your fortune below the surface
 
 Use your mouse to draw search patterns. When you find something, double click to dig.
 Spend your findings on expanding the business.
