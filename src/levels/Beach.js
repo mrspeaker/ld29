@@ -47,6 +47,15 @@
 				});
 			}
 
+			let spawns = level.layer("spawns");
+
+			this.playerSpawn = spawns.name("player_spawn");
+			this.copSpawn = spawns.name("cop_spawn");
+
+			let sb = spawns.type("sb_man").concat(
+				spawns.type("sb_lady")
+			);
+
 			var map = this.generateMap(w, h);
 			this.map = map.map;
 			this.map.cells = level.layers[0].data;
@@ -55,10 +64,9 @@
 			this.w = this.map.w;
 			this.h = this.map.h;
 
-			this.generateBeachPeeps(10);
+			this.generateBeachPeeps(sb);
 
-			this.playerSpawn = level.objectByName("spawns", "player_spawn")[0];
-			this.copSpawn = level.objectByName("spawns", "cop_spawn")[0];
+			console.log(this.sb);
 
 			this.pos = {
 				x: Ω.env.w / 2,
@@ -175,7 +183,7 @@
 
 		},
 
-		generateBeachPeeps: function (numsuns) {
+		generateBeachPeeps: function (sbs) {
 
 			let cells = this.map.cells;
 
@@ -190,6 +198,28 @@
 			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
 
 			this.sunbathers = [];
+
+			sbs.forEach((sb) => {
+				let xo = sb.x;
+				let yo = sb.y;
+				let type = sb.type === "sb_lady" ? 0 : 1;
+
+				let sunbather = this.add(
+					new window.BeachBum(
+						xo,
+						yo,
+						type
+					), "extras", 2);
+				this.sunbathers.push(sunbather);
+
+				var cell = this.map.getBlockCell([sunbather.x, sunbather.y]);
+				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+
+			});
+
+			/*
+
 			for (let i = 0; i < numsuns; i++) {
 
 				let found = false;
@@ -218,7 +248,9 @@
 				var cell = this.map.getBlockCell([sunbather.x, sunbather.y]);
 				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
 				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+
 			}
+			*/
 
 		},
 
