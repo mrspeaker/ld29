@@ -19,6 +19,7 @@ ES6 options:
 
 ## Add back to Ω500
 
+	remove bodies from auto sytem
 
 
 ## NOtes:
