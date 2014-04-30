@@ -18,6 +18,9 @@
         autoTick: false,
         curTime: 0,
 
+        curLevel: 0,
+        maxLevel: 2,
+
         cashcashmoney: 0,
 
         init: function () {
@@ -27,6 +30,10 @@
         },
 
         reset: function () {var this$0 = this;
+
+            if (this.curLevel++ > this.maxLevel) {
+                this.curLevel = 1;
+            };
 
             this.removeAll();
 
@@ -39,7 +46,7 @@
 
             this.camera = new Ω.Camera(0, 0, Ω.env.w, Ω.env.h - 64);
 
-            this.beach = this.add(new window.Beach(env, function()  {
+            this.beach = this.add(new window.Beach(this.curLevel, env, function()  {
 
                 this$0.add(this$0.beach.map, "map", 1);
                 this$0.player = this$0.add(new window.Player(

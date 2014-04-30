@@ -11,9 +11,9 @@
 		curLevel: null,
 		loaded: false,
 
-		init: function (env, cb) {
+		init: function (levelIdx, env, cb) {
 
-			this.load("level01.json", cb);
+			this.load(`level${levelIdx}.json`, cb);
 
 			this.walkableSandCells = this.sheet.cellW * 2;
 			this.env = env;
@@ -56,6 +56,8 @@
 				spawns.type("sb_lady")
 			);
 
+			let beer_spawns = spawns.type("beer_stand");
+
 			var map = this.generateMap(w, h);
 			this.map = map.map;
 			this.map.cells = level.layers[0].data;
@@ -64,9 +66,7 @@
 			this.w = this.map.w;
 			this.h = this.map.h;
 
-			this.generateBeachPeeps(sb);
-
-			console.log(this.sb);
+			this.generateBeachPeeps(sb, beer_spawns);
 
 			this.pos = {
 				x: Ω.env.w / 2,
@@ -183,19 +183,16 @@
 
 		},
 
-		generateBeachPeeps: function (sbs) {
+		generateBeachPeeps: function (sbs, beerSpawns) {
 
 			let cells = this.map.cells;
 
 			let x = this.map.cellW / 2 - 1 | 0;
 			let y = this.map.cellH / 2 - 1 | 0;
 
-			this.stand = this.add(new window.BeerStand(x * this.sheet.w, y * this.sheet.h));
-
-			cells[y][x] = 2 * this.sheet.cellW + 8;
-			cells[y][x + 1] = 2 * this.sheet.cellW + 9;
-			cells[y + 1][x] = 3 * this.sheet.cellW + 8;
-			cells[y + 1][x + 1] = 3 * this.sheet.cellW + 9;
+			this.stands = beerSpawns.map((stand) => {
+				return this.add(new window.BeerStand(stand.x, stand.y));
+			});
 
 			this.sunbathers = [];
 
@@ -217,40 +214,6 @@
 				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
 
 			});
-
-			/*
-
-			for (let i = 0; i < numsuns; i++) {
-
-				let found = false;
-				var xo, yo;
-
-				while(!found) {
-
-					xo = Ω.math.snap(Ω.utils.rand(this.w), 32);
-					yo = Ω.math.snap(Ω.utils.rand(this.h - 96), 32) + 32;
-
-					if (this.map.getBlock([xo, yo]) < this.map.walkable &&
-						this.map.getBlock([xo, yo + 32]) < this.map.walkable) {
-						found = true;
-					}
-
-				}
-
-				let sunbather = this.add(
-					new window.BeachBum(
-						xo,
-						yo,
-						Ω.utils.rand(2)
-					), "extras", 2);
-				this.sunbathers.push(sunbather);
-
-				var cell = this.map.getBlockCell([sunbather.x, sunbather.y]);
-				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
-				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
-
-			}
-			*/
 
 		},
 

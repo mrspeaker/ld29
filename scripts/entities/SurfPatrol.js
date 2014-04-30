@@ -4,10 +4,10 @@
 
 	var SurfPatrol = Ω.Entity.extend({
 		w: 24,
-		h: 32,
+		h: 20,
 
 		speed: {
-			patrol: 0.5,
+			patrol: 0.1,
 			chase: 1
 		},
 
@@ -54,7 +54,7 @@
 				break;
 			case "CHASE":
 				if (Ω.utils.oneIn(200)) {
-					//this.state.set("PATROL");
+					this.state.set("PATROL");
 				}
 				if (this.state.count % 5 === 0) {
 					this.findPlayer();
@@ -88,6 +88,11 @@
 				yo += this.speed.patrol;
 				break;
 			}
+
+			if (xo !== 0 && yo !== 0) {
+                xo /= Math.sqrt(2);
+                yo /= Math.sqrt(2);
+            }
 
 			this.move(xo, yo, this.beach.map);
 		},
@@ -124,7 +129,8 @@
 
 			var c = gfx.ctx;
 
-			this.anims.render(gfx, this.x, this.y);
+			this.anims.render(gfx, this.x, this.y - 16);
+
 	   }
 
 	});

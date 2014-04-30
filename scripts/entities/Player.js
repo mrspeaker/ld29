@@ -3,7 +3,7 @@
     "use strict";
 
     var Player = Ω.Entity.extend({
-        w: 24,
+        w: 18,
         h: 20,
 
         center: null,
@@ -24,7 +24,7 @@
 
         lastBlip: 0,
 
-        cash: 0,
+        cash: 1,
 
         hydration: 100,
         dehydrate: 0.1, // (geddit? dehyd...rate!)
@@ -223,7 +223,7 @@
                 }
             } else {
                 if (Ω.input.isDown("fire")) {
-                    Ω.Physics.checkCollision(this, [this.beach.stand], "drink");
+                    Ω.Physics.checkCollision(this, this.beach.stands, "drink");
                 }
             }
 
@@ -275,7 +275,7 @@
 
             var c = gfx.ctx;
 
-            this.anims.render(gfx, this.x, this.y - 16);
+            this.anims.render(gfx, this.x - 3, this.y - 16);
 
             /*c.strokeStyle = "#000";
             c.fillStyle = "#000";
