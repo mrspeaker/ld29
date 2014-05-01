@@ -158,7 +158,7 @@
  "orientation":"orthogonal",
  "properties":
     {
-
+     "num_treasures":"5"
     },
  "tileheight":32,
  "tilesets":[

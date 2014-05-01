@@ -25,6 +25,8 @@
 
         init: function () {
 
+            //Ω.Sound._setVolume(0);
+
             this.reset();
 
         },
@@ -33,7 +35,7 @@
 
             if (this.curLevel++ > this.maxLevel) {
                 this.curLevel = 1;
-            };
+            }
 
             this.removeAll();
 
@@ -164,9 +166,11 @@
             this.sounds.dead.play();
         },
 
+        /* jshint ignore:start */
         gameover: function (manner) {
             this.state.set("GAMEOVER", {manner: manner});
         },
+        /* jshint ignore:end */
 
         render: function (gfx) {
 
@@ -176,13 +180,9 @@
 
         renderPost: function (gfx) {
 
-            var c = gfx.ctx,
-                top = gfx.h - 70;
-
+            var top = gfx.h - 70;
 
             this.horizon.render(gfx, 0, - this.camera.y - 90);
-            //c.fillStyle = "hsl(200, 40%, 20%)";
-            //c.fillRect(0, top, Ω.env.w, 100);
             this.hud.render(gfx, 0, top - 20);
 
             this.font.render(gfx, "cash: $" + (this.cashcashmoney + this.player.cash), 16, top + 16);

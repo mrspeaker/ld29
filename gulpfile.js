@@ -1,7 +1,11 @@
+/* global require, process */
+
+"use strict";
+
 var gulp = require("gulp"),
-	gutil = require('gulp-util'),
-	es6transpiler = require('gulp-es6-transpiler'),
-	spawn = require('child_process').spawn,
+	gutil = require("gulp-util"),
+	es6transpiler = require("gulp-es6-transpiler"),
+	spawn = require("child_process").spawn,
 
 	imgGlob = "res/images/**/*.pxm",
 	audioGlob = "res/audio/**/*.wav",
@@ -16,7 +20,8 @@ gulp.task("es62es5", function () {
 		.pipe(es6transpiler({
 			"globals": {
 				"Ω": true
-			}
+			},
+			"devel": true
 		}))
 		.on("error", gutil.log)
 		.pipe(gulp.dest("scripts"));
@@ -39,14 +44,14 @@ function pxm2png (e) {
 		file = path[path.length - 1];
 
 	if (e.type === "deleted") {
-		console.log("deleted:", file)
+		console.log("deleted:", file);
 		return;
 	}
 
 	spawn("./pxm2png", [e.path], {cwd: process.cwd() + "/lib/tools/"});
 
 	console.log("PNG'd:", file);
-};
+}
 
 function wav2comp (e) {
 	//console.log("WAV:", e);
@@ -58,7 +63,7 @@ function wav2comp (e) {
 		file = path[path.length - 1];
 
 	if (e.type === "deleted") {
-		console.log("deleted:", file)
+		console.log("deleted:", file);
 		return;
 	}
 
@@ -66,4 +71,4 @@ function wav2comp (e) {
 	spawn("ffmpeg", ["-y", "-i", sound + ".wav", sound + ".ogg", sound + ".mp3"]);
 
 	console.log("Ogg n mp3'd:", file);
-};
+}
