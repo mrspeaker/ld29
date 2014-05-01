@@ -68,46 +68,42 @@
 
         tick: function () {
 
-            this.state.tick();
-            switch(this.state.get()) {
+            var state = this.state;
+            state.tick();
+            var count = state.count;
+
+            switch(state.get()) {
             case "BORN":
-                this.state.set("IDLE");
+                state.set("IDLE");
                 break;
             case "IDLE":
-                this.state.set("LOOKING");
+                state.set("LOOKING");
                 break;
             case "LOOKING":
-                if (this.state.first()) {
+                if (state.first()) {
                     this.anims.set(("detect" + (this.dir === DIRS.up ? "Up" : "Down")));
                 }
                 this.tick_LOOKING();
                 break;
             case "DIGGING":
-                if (this.state.first()) {
+                if (state.first()) {
                     this.anims.set("dig");
                     this.digging = true;
                 }
 
-                if (this.state.count === 10) {
-                    this.beach.dig(this, 0);
+                // Do hole animation
+                if (count < 41 && count % 10 === 0) {
+                    this.beach.dig(this, (count / 10) - 1);
                 }
-                if (this.state.count === 20) {
-                    this.beach.dig(this, 1);
-                }
-                if (this.state.count === 30) {
-                    this.beach.dig(this, 2);
-                }
-                if (this.state.count === 40) {
-                    this.beach.dig(this, 3);
-                }
+
                 if (Ω.input.released("fire")) {
                     this.digging = false;
-                    this.state.set("LOOKING");
-                } else if (this.state.count > 50) {
+                    state.set("LOOKING");
+                } else if (count > 50) {
                     this.digging = false;
                     var gets = this.beach.search(this, true);
                     if (gets) {
-                        this.state.set("ROCKINGOUT", {treasure: gets});
+                        state.set("ROCKINGOUT", {treasure: gets});
                     } else {
                         console.log("Found squat.");
                     }
@@ -115,35 +111,35 @@
                 this.anims.tick();
                 break;
             case "ROCKINGOUT":
-                if (this.state.first()) {
+                if (state.first()) {
                     this.anims.set("rockout");
                     this.sounds.cash.play();
                     this.sounds.coin.play();
                     this.cash += this.state.data.treasure;
                 }
                 this.anims.tick();
-                if (this.state.count > 60) {
+                if (count > 60) {
                     this.state.set("LOOKING");
                 }
                 break;
             case "DRINKING":
-                if (this.state.first()) {
+                if (state.first()) {
                     this.cash -= 1;
                     this.anims.set("beer");
                 }
-                if (this.state.count > 60) {
+                if (count > 60) {
                     this.hydration = Math.min(100, this.hydration + 75);
                     this.state.set("LOOKING");
                 }
                 this.anims.tick();
                 break;
             case "CAPTURED":
-                if (this.state.count > 100) {
+                if (count > 100) {
                     this.screen.gameover("CAPTURED");
                 }
                 break;
             case "DEHYDRATED":
-                if (this.state.count > 100) {
+                if (count > 100) {
                     this.screen.gameover("DEHYDRATED");
                 }
                 break;
