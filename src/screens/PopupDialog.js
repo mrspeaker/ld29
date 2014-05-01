@@ -6,7 +6,7 @@
 
 		font: new Ω.Font("res/images/mamefont.png", 16, 16, "abcdefghijklmnopqrstuvwxyz0123456789 .,:!?'\"&<>$"),
 
-		init: function (msg, key, cb) {
+		init (msg, key, cb) {
 
 			this._super(key, cb);
 
@@ -14,7 +14,7 @@
 
 		},
 
-		tick: function (delta) {
+		tick (delta) {
 
 			this.time += delta;
 
@@ -25,7 +25,7 @@
 
 		},
 
-		render: function (gfx) {
+		render (gfx) {
 
 			var c = gfx.ctx;
 

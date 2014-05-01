@@ -44,4 +44,4 @@
 
     window.LD29 = LD29;
 
-}(Ω));
+}(window.Ω));

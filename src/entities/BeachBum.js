@@ -8,14 +8,14 @@
 
 		sheet: new Ω.SpriteSheet("res/images/extras.png", 32, 32),
 
-		init: function (x, y, type) {
+		init (x, y, type) {
 
 			this._super(x, y);
 			this.type = type;
 
 		},
 
-		render: function (gfx) {
+		render (gfx) {
 
 			var c = gfx.ctx,
 				t = this.type

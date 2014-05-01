@@ -6,8 +6,6 @@
 
         font: new Ω.Font("res/images/mamefont.png", 16, 16, "abcdefghijklmnopqrstuvwxyz0123456789 .,:!?'\"&<>$"),
 
-        img: new Ω.Image("res/images/title.png"),
-
         init: function (manner, cash, levels) {
 
             this.manner = manner;
@@ -37,7 +35,6 @@
             }
 
             this.font.render(gfx, "you earned $" + this.cash, Ω.env.w * 0.5 - 150, Ω.env.h / 2 + 64);
-            //this.img.render(gfx, 0, 0);
 
         }
 

@@ -217,7 +217,6 @@
                 if (gets$0) {
                     this.state.set("DIGGING", {treasure: gets$0});
                     this.drinkOk = false;
-                    return true;
                 } else {
                     this.drinkOk = true;
                 }
@@ -235,7 +234,6 @@
                 this.sounds.thirsty.stop();
                 this.hydrationWarning = false;
             }
-
 
             if (this.hydration < 0) {
                 this.screen.predead();
@@ -272,8 +270,6 @@
         },
 
         render: function (gfx) {
-
-            var c = gfx.ctx;
 
             this.anims.render(gfx, this.x - 3, this.y - 16);
 

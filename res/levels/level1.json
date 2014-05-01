@@ -68,7 +68,7 @@
 
                     },
                  "rotation":0,
-                 "type":"sb_man",
+                 "type":"sb_lady",
                  "visible":true,
                  "width":0,
                  "x":416,
@@ -83,7 +83,7 @@
 
                     },
                  "rotation":0,
-                 "type":"sb_man",
+                 "type":"sb_lady",
                  "visible":true,
                  "width":0,
                  "x":256,
@@ -128,7 +128,7 @@
 
                     },
                  "rotation":0,
-                 "type":"sb_man",
+                 "type":"sb_lady",
                  "visible":true,
                  "width":0,
                  "x":160,

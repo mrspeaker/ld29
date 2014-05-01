@@ -38,7 +38,7 @@
             click: new Ω.Sound("res/audio/build", 1, false)
         },
 
-        init: function (x, y, screen) {
+        init (x, y, screen) {
 
             this._super(x, y);
             this.beach = screen.beach;
@@ -62,11 +62,11 @@
 
         },
 
-        reset: function () {
+        reset () {
             this.state.set("BORN");
         },
 
-        tick: function () {
+        tick () {
 
             this.state.tick();
             switch(this.state.get()) {
@@ -153,7 +153,7 @@
 
         },
 
-        tick_LOOKING: function () {
+        tick_LOOKING () {
 
             var xo = 0,
                 yo = 0,
@@ -217,7 +217,6 @@
                 if (gets) {
                     this.state.set("DIGGING", {treasure: gets});
                     this.drinkOk = false;
-                    return true;
                 } else {
                     this.drinkOk = true;
                 }
@@ -236,7 +235,6 @@
                 this.hydrationWarning = false;
             }
 
-
             if (this.hydration < 0) {
                 this.screen.predead();
                 this.state.set("DEHYDRATED");
@@ -245,14 +243,14 @@
             return true;
         },
 
-        hit: function () {
+        hit () {
             if (this.state.isNot("CAPTURED")) {
                 this.screen.predead();
                 this.state.set("CAPTURED");
             }
         },
 
-        drink: function () {
+        drink () {
             if (!this.drinkOk) {
                 return;
             }
@@ -271,9 +269,7 @@
             }
         },
 
-        render: function (gfx) {
-
-            var c = gfx.ctx;
+        render (gfx) {
 
             this.anims.render(gfx, this.x - 3, this.y - 16);
 

@@ -4,7 +4,7 @@
 
 	var Blip = Ω.Class.extend({
 
-        init: function (x, y) {
+        init (x = 0, y = 0) {
 
             this.max = 30;
             this.time = this.max;
@@ -14,7 +14,7 @@
 
         },
 
-        tick: function () {
+        tick () {
             this.ratio = 1 - (this.time / this.max);
             this.y -= 1;
 
@@ -22,7 +22,7 @@
 
         },
 
-        render: function (gfx) {
+        render (gfx) {
 
             var c = gfx.ctx;
 
@@ -35,4 +35,4 @@
 
     window.Blip = Blip;
 
-}(Ω));
+}(window.Ω));

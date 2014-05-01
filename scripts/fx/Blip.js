@@ -4,7 +4,7 @@
 
 	var Blip = Ω.Class.extend({
 
-        init: function (x, y) {
+        init: function () {var x = arguments[0];if(x === void 0)x = 0;var y = arguments[1];if(y === void 0)y = 0;
 
             this.max = 30;
             this.time = this.max;
@@ -35,4 +35,4 @@
 
     window.Blip = Blip;
 
-}(Ω));
+}(window.Ω));

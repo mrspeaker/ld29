@@ -23,7 +23,7 @@
 
         cashcashmoney: 0,
 
-        init: function () {
+        init () {
 
             //Ω.Sound._setVolume(0);
 
@@ -31,7 +31,7 @@
 
         },
 
-        reset: function () {
+        reset () {
 
             if (this.curLevel++ > this.maxLevel) {
                 this.curLevel = 1;
@@ -71,7 +71,7 @@
 
         },
 
-        tick: function () {
+        tick () {
 
             this.state.tick();
 
@@ -141,7 +141,7 @@
 
         },
 
-        tick_DAY: function () {
+        tick_DAY () {
 
             this.tickBodies();
 
@@ -160,25 +160,25 @@
         },
 
 
-        predead: function () {
+        predead () {
             Ω.Sound._reset();
             this.sounds.tune.stop();
             this.sounds.dead.play();
         },
 
         /* jshint ignore:start */
-        gameover: function (manner) {
+        gameover (manner) {
             this.state.set("GAMEOVER", {manner});
         },
         /* jshint ignore:end */
 
-        render: function (gfx) {
+        render (gfx) {
 
             this.clear(gfx, "hsl(198, 68%, 52%)");
 
         },
 
-        renderPost: function (gfx) {
+        renderPost (gfx) {
 
             let top = gfx.h - 70;
 

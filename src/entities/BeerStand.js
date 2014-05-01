@@ -9,13 +9,13 @@
 
 		sheet: new Ω.SpriteSheet("res/images/walkers.png", 24, 32),
 
-		init: function (x, y) {
+		init (x, y) {
 
 			this._super(x, y);
 
 		},
 
-		render: function (gfx) {
+		render (gfx) {
 
 			var c = gfx.ctx;
 

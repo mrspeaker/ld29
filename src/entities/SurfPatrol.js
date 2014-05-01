@@ -15,7 +15,7 @@
 
 		state: null,
 
-		init: function (x, y, screen) {
+		init (x, y, screen) {
 
 			this._super(x, y);
 
@@ -31,15 +31,15 @@
 			this.findPlayer();
 		},
 
-		reset: function () {
+		reset () {
 			this.state.set("BORN");
 		},
 
-		findPlayer: function () {
+		findPlayer () {
 			this.path = this.beach.findPlayer(this);
 		},
 
-		tick: function () {
+		tick () {
 
 			this.state.tick();
 			switch (this.state.get()) {
@@ -69,7 +69,7 @@
 
 		},
 
-		tick_PATROL: function () {
+		tick_PATROL () {
 
 			var xo = 0,
 				yo = 0;
@@ -97,7 +97,7 @@
 			this.move(xo, yo, this.beach.map);
 		},
 
-		tick_CHASE: function () {
+		tick_CHASE () {
 			var xo = 0,
 				yo = 0,
 				w = this.beach.map.sheet.w;
@@ -125,7 +125,7 @@
 			this.move(xo, yo, this.beach.map);
 		},
 
-		render: function (gfx) {
+		render (gfx) {
 
 			var c = gfx.ctx;
 

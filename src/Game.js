@@ -8,7 +8,7 @@
 
         fps: false,
 
-        init: function (w, h) {
+        init (w, h) {
 
             this._super(w, h);
 
@@ -28,13 +28,13 @@
 
         },
 
-        load: function () {
+        load () {
 
             this.reset();
 
         },
 
-        reset: function () {
+        reset () {
 
             this.setScreen(new window.TitleScreen());
 
@@ -44,4 +44,4 @@
 
     window.LD29 = LD29;
 
-}(Ω));
+}(window.Ω));
