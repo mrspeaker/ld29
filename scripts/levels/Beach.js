@@ -22,7 +22,12 @@
 
 			this.loaded = false;
 
-			new Ω.Tiled((("res/levels/" + name) + ("?" + (Date.now())) + ""), function(level)  {
+			new Ω.Tiled((("res/levels/" + name) + ("?" + (Date.now())) + ""), function(level, err)  {
+
+				if (err) {
+					console.log("Error loading beach:", err);
+					return;
+				}
 
 				this$0.level = level;
 				this$0.reset(level);

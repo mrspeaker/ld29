@@ -26,7 +26,6 @@
         init () {
 
             //Ω.Sound._setVolume(0);
-
             this.reset();
 
         },

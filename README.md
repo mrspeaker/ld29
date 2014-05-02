@@ -60,6 +60,12 @@ Spend your findings on expanding the business.
 
 * Have health that decreases - needs water. Hat can slow it.
 
+### Crazyiness
+
+* spawn new guys, all controlled by the same keys - cover more ground
+* some kind of "mass detector" to see a bunhc of ground at once
+* some way to stun the cops
+
 
 ### Baddies
 
