@@ -39,7 +39,7 @@
 
 		},
 
-		reset: function (level) {
+		reset: function (level) {function ITER$0(v,f){var $Symbol_iterator=typeof Symbol!=='undefined'&&Symbol.iterator||'@@iterator';if(v){if(Array.isArray(v))return f?v.slice():v;var i,r;if(typeof v==='object'&&typeof (f=v[$Symbol_iterator])==='function'){i=f.call(v);r=[];while((f=i['next']()),f['done']!==true)r.push(f['value']);return r;}}throw new Error(v+' is not iterable')};
 
 			if (this.sunbathers) {
 				this.sunbathers.forEach(function(sb)  {
@@ -61,7 +61,7 @@
 			this.copSpawn = spawns.name("cop_spawn");
 			this.playerSpawn = spawns.name("player_spawn");
 			this.generateBeachPeeps(
-				spawns.type("sb_man").concat(spawns.type("sb_lady")),
+				[].concat(ITER$0(spawns.type("sb_man"), true), ITER$0(spawns.type("sb_lady"))),
 				spawns.type("beer_stand")
 			);
 
@@ -88,14 +88,16 @@
 		},
 
 		search: function (player, removeIfFound) {
-			var blockPixPos = [player.x + player.center.x, player.y + player.center.y];
-			var blockCellPos = this.map.getBlockCell(blockPixPos);
-			var blockType = this.map.getBlock(blockPixPos);
-			// Dodgy hack: if on first line == not searched
+			var map = (sheet = this).map, sheet = sheet.sheet,
+				x = player.x, y = player.y, center = player.center,
+				blockPixPos = [x + center.x, y + center.y],
+				blockCellPos = map.getBlockCell(blockPixPos),
+				blockType = map.getBlock(blockPixPos);
 
-			if (!removeIfFound && blockType < this.sheet.cellW) {
+			// Dodgy hack: if on first line == not searched
+			if (!removeIfFound && blockType < sheet.cellW) {
 				this.toDig--;
-				this.map.setBlock(blockPixPos, blockType + this.sheet.cellW);
+				map.setBlock(blockPixPos, blockType + sheet.cellW);
 			}
 
 			// Any treasure?
@@ -110,22 +112,26 @@
 		},
 
 		dig: function (player, stage) {
-			var blockPixPos = [player.x + player.center.x, player.y + player.center.y];
 
-			this.map.setBlock(blockPixPos, this.sheet.cellW + 6 + stage); // Ummmm... what is 6?
+			var map = (sheet = this).map, sheet = sheet.sheet,
+				x = player.x, y = player.y, center = player.center,
+				pos = [x + center.x, y + center.y];
+
+			map.setBlock(pos, sheet.cellW + 6 + stage); // Ummmm... what is 6?
+
 		},
 
 		tick: function () {
 
 			// Todo: this should be mainscreen
+			var x = (center = this.player).x, y = center.y, center = center.center,
+				pos = (env = this).pos, map = env.map, env = env.env;
 
-			var player = this.player;
+			var midX = x - (env.w / 2) + center.y,
+				midY = y - (env.h / 2);
 
-			this.pos.x = player.x - (Ω.env.w / 2) + player.center.y;
-			this.pos.y = player.y - (Ω.env.h / 2);
-
-			this.pos.x = Ω.math.clamp(this.pos.x, 0, this.map.w - this.env.w);
-			this.pos.y = Ω.math.clamp(this.pos.y, -80, this.map.h - this.env.h);
+			pos.x = Ω.math.clamp(midX, 0, map.w - env.w);
+			pos.y = Ω.math.clamp(midY, -80, map.h - env.h);
 
 			return true;
 
@@ -133,22 +139,18 @@
 
 		findPlayer: function (e) {
 
-			var w = this.map.sheet.w;
-			var h = this.map.sheet.h;
+			var map = (player = this).map, graph = player.graph, player = player.player,
+				w = (h = map.sheet).w, h = h.h,
+				nodes = graph.nodes,
+				from = nodes[e.y / w | 0][e.x / h | 0],
+				to = nodes[player.y / w | 0][player.x / h | 0];
 
 			// Recompute A*
-			return Ω.Math.aStar.search(
-				this.graph.nodes,
-				this.graph.nodes[e.y / w | 0][e.x / h | 0],
-				this.graph.nodes[this.player.y / w | 0][this.player.x / h | 0]
-			);
+			return Ω.Math.aStar.search(nodes, from, to);
 
 		},
 
 		generateMap: function (width, length) {
-
-			this.width = width;
-			this.length = length;
 
 			var cells = [];
 
@@ -202,18 +204,20 @@
 		generateTreasures: function (level, map) {
 			var numTreasures = level.properties.num_treasures,
 				toAdd = numTreasures,
-				cellW = map.cellW, cellH = map.cellH;
+				cellW = map.cellW, cellH = map.cellH, cells = map.cells;
 
-			var t = map.cells.map(function(r)  {return r.map(function(c)  {return 0})});
+			// Create empty map
+			var t = cells.map(function(r)  {return r.map(function(c)  {return 0})});
 
+			// Add treasures
 			while (toAdd) {
 				var rx = Ω.utils.rand(cellW),
 					ry = Ω.utils.rand(cellH),
-					cell = map.cells[ry][rx];
+					cell = cells[ry][rx];
 				if (cell <= this.walkableSandCells) {
-					console.log("ree!", rx, ry);
+					// 1 to 3 bucks!
+					t[ry][rx] = Ω.utils.rand(2) + 1;
 					toAdd --;
-					t[ry][rx] = 1;
 				}
 			}
 

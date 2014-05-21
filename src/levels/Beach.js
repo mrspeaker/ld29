@@ -61,7 +61,7 @@
 			this.copSpawn = spawns.name("cop_spawn");
 			this.playerSpawn = spawns.name("player_spawn");
 			this.generateBeachPeeps(
-				spawns.type("sb_man").concat(spawns.type("sb_lady")),
+				[...spawns.type("sb_man"), ...spawns.type("sb_lady")],
 				spawns.type("beer_stand")
 			);
 
@@ -88,14 +88,16 @@
 		},
 
 		search (player, removeIfFound) {
-			var blockPixPos = [player.x + player.center.x, player.y + player.center.y];
-			var blockCellPos = this.map.getBlockCell(blockPixPos);
-			var blockType = this.map.getBlock(blockPixPos);
-			// Dodgy hack: if on first line == not searched
+			let {map, sheet} = this,
+				{x, y, center} = player,
+				blockPixPos = [x + center.x, y + center.y],
+				blockCellPos = map.getBlockCell(blockPixPos),
+				blockType = map.getBlock(blockPixPos);
 
-			if (!removeIfFound && blockType < this.sheet.cellW) {
+			// Dodgy hack: if on first line == not searched
+			if (!removeIfFound && blockType < sheet.cellW) {
 				this.toDig--;
-				this.map.setBlock(blockPixPos, blockType + this.sheet.cellW);
+				map.setBlock(blockPixPos, blockType + sheet.cellW);
 			}
 
 			// Any treasure?
@@ -110,22 +112,26 @@
 		},
 
 		dig (player, stage) {
-			let blockPixPos = [player.x + player.center.x, player.y + player.center.y];
 
-			this.map.setBlock(blockPixPos, this.sheet.cellW + 6 + stage); // Ummmm... what is 6?
+			let {map, sheet} = this,
+				{x, y, center} = player,
+				pos = [x + center.x, y + center.y];
+
+			map.setBlock(pos, sheet.cellW + 6 + stage); // Ummmm... what is 6?
+
 		},
 
 		tick () {
 
 			// Todo: this should be mainscreen
+			let {x, y, center} = this.player,
+				{pos, map, env} = this;
 
-			let player = this.player;
+			let midX = x - (env.w / 2) + center.y,
+				midY = y - (env.h / 2);
 
-			this.pos.x = player.x - (Ω.env.w / 2) + player.center.y;
-			this.pos.y = player.y - (Ω.env.h / 2);
-
-			this.pos.x = Ω.math.clamp(this.pos.x, 0, this.map.w - this.env.w);
-			this.pos.y = Ω.math.clamp(this.pos.y, -80, this.map.h - this.env.h);
+			pos.x = Ω.math.clamp(midX, 0, map.w - env.w);
+			pos.y = Ω.math.clamp(midY, -80, map.h - env.h);
 
 			return true;
 
@@ -133,24 +139,20 @@
 
 		findPlayer (e) {
 
-			let w = this.map.sheet.w;
-			let h = this.map.sheet.h;
+			let {map, graph, player} = this,
+				{w, h} = map.sheet,
+				nodes = graph.nodes,
+				from = nodes[e.y / w | 0][e.x / h | 0],
+				to = nodes[player.y / w | 0][player.x / h | 0];
 
 			// Recompute A*
-			return Ω.Math.aStar.search(
-				this.graph.nodes,
-				this.graph.nodes[e.y / w | 0][e.x / h | 0],
-				this.graph.nodes[this.player.y / w | 0][this.player.x / h | 0]
-			);
+			return Ω.Math.aStar.search(nodes, from, to);
 
 		},
 
 		generateMap (width, length) {
 
-			this.width = width;
-			this.length = length;
-
-			var cells = [];
+			let cells = [];
 
 			for (let j = 0; j < length; j++) {
 				cells.push([]);
@@ -202,18 +204,20 @@
 		generateTreasures (level, map) {
 			let numTreasures = level.properties.num_treasures,
 				toAdd = numTreasures,
-				{cellW, cellH} = map;
+				{cellW, cellH, cells} = map;
 
-			let t = map.cells.map((r) => r.map((c) => 0));
+			// Create empty map
+			let t = cells.map((r) => r.map((c) => 0));
 
+			// Add treasures
 			while (toAdd) {
 				let rx = Ω.utils.rand(cellW),
 					ry = Ω.utils.rand(cellH),
-					cell = map.cells[ry][rx];
+					cell = cells[ry][rx];
 				if (cell <= this.walkableSandCells) {
-					console.log("ree!", rx, ry);
+					// 1 to 3 bucks!
+					t[ry][rx] = Ω.utils.rand(2) + 1;
 					toAdd --;
-					t[ry][rx] = 1;
 				}
 			}
 
@@ -228,7 +232,7 @@
 			let cells = map.cells.map((r) => {
 				// Map the level grid to 1's and 0's
 				return r.map((c) => {
-					var cell = c > map.walkable ? 1 : 0;
+					let cell = c > map.walkable ? 1 : 0;
 					if (cell === 0) {
 						toDig++;
 					}

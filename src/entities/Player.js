@@ -43,14 +43,16 @@
             this._super(x, y);
             this.beach = screen.beach;
             this.screen = screen;
+
+            let sheet = this.sheet;
             this.anims = new Ω.Anims([
-                new Ω.Anim("detectUp", this.sheet, 150, [[3, 0], [4, 0], [3, 0], [2, 0]]),
-                new Ω.Anim("detectDown", this.sheet, 150, [[6, 0], [7, 0], [6, 0], [5, 0]]),
-                new Ω.Anim("detectLeft", this.sheet, 150, [[5, 1], [6, 1], [5, 1], [4, 1]]),
-                new Ω.Anim("detectRight", this.sheet, 150, [[8, 1], [9, 1], [8, 1], [7, 1]]),
-                new Ω.Anim("dig", this.sheet, 120, [[0, 1], [1, 1]]),
-                new Ω.Anim("rockout", this.sheet, 120, [[2, 1], [3, 1]]),
-                new Ω.Anim("beer", this.sheet, 100, [[4, 2], [5, 2]])
+                new Ω.Anim("detectUp", sheet, 150, [[3, 0], [4, 0], [3, 0], [2, 0]]),
+                new Ω.Anim("detectDown", sheet, 150, [[6, 0], [7, 0], [6, 0], [5, 0]]),
+                new Ω.Anim("detectLeft", sheet, 150, [[5, 1], [6, 1], [5, 1], [4, 1]]),
+                new Ω.Anim("detectRight", sheet, 150, [[8, 1], [9, 1], [8, 1], [7, 1]]),
+                new Ω.Anim("dig", sheet, 120, [[0, 1], [1, 1]]),
+                new Ω.Anim("rockout", sheet, 120, [[2, 1], [3, 1]]),
+                new Ω.Anim("beer", sheet, 100, [[4, 2], [5, 2]])
             ]);
 
             this.center = {
@@ -68,7 +70,8 @@
 
         tick () {
 
-            let state = this.state;
+            let {state, anims, sounds, screen, beach} = this;
+
             state.tick();
             let count = state.count;
 
@@ -81,19 +84,19 @@
                 break;
             case "LOOKING":
                 if (state.first()) {
-                    this.anims.set(`detect${ this.dir === DIRS.up ? "Up" : "Down"}`);
+                    anims.set(`detect${ this.dir === DIRS.up ? "Up" : "Down"}`);
                 }
                 this.tick_LOOKING();
                 break;
             case "DIGGING":
                 if (state.first()) {
-                    this.anims.set("dig");
+                    anims.set("dig");
                     this.digging = true;
                 }
 
                 // Do hole animation
                 if (count < 41 && count % 10 === 0) {
-                    this.beach.dig(this, (count / 10) - 1);
+                    beach.dig(this, (count / 10) - 1);
                 }
 
                 if (Ω.input.released("fire")) {
@@ -101,7 +104,7 @@
                     state.set("LOOKING");
                 } else if (count > 50) {
                     this.digging = false;
-                    let gets = this.beach.search(this, true);
+                    let gets = beach.search(this, true);
                     if (gets) {
                         state.set("ROCKINGOUT", {treasure: gets});
                     } else {
@@ -112,35 +115,35 @@
                 break;
             case "ROCKINGOUT":
                 if (state.first()) {
-                    this.anims.set("rockout");
-                    this.sounds.cash.play();
-                    this.sounds.coin.play();
-                    this.cash += this.state.data.treasure;
+                    anims.set("rockout");
+                    sounds.cash.play();
+                    sounds.coin.play();
+                    this.cash += state.data.treasure;
                 }
-                this.anims.tick();
+                anims.tick();
                 if (count > 60) {
-                    this.state.set("LOOKING");
+                    state.set("LOOKING");
                 }
                 break;
             case "DRINKING":
                 if (state.first()) {
                     this.cash -= 1;
-                    this.anims.set("beer");
+                    anims.set("beer");
                 }
                 if (count > 60) {
                     this.hydration = Math.min(100, this.hydration + 75);
-                    this.state.set("LOOKING");
+                    state.set("LOOKING");
                 }
-                this.anims.tick();
+                anims.tick();
                 break;
             case "CAPTURED":
                 if (count > 100) {
-                    this.screen.gameover("CAPTURED");
+                    screen.gameover("CAPTURED");
                 }
                 break;
             case "DEHYDRATED":
                 if (count > 100) {
-                    this.screen.gameover("DEHYDRATED");
+                    screen.gameover("DEHYDRATED");
                 }
                 break;
             }
