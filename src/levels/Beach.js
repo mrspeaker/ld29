@@ -50,12 +50,11 @@
 			let {w, h} = level;
 
 			// 1. Get beach, make map
-			var map = this.generateMap(w, h);
-			this.map = map.map;
-			this.w = this.map.w;
-			this.h = this.map.h;
+			let map = this.map = this.generateMap(w, h);
+			this.w = map.w;
+			this.h = map.h;
 			let beach = level.layer("beach");
-			this.map.cells = beach.get().data;
+			map.cells = beach.get().data;
 
 			// 2. Add sunbathers/beer stand
 			let spawns = level.layer("spawns");
@@ -72,7 +71,7 @@
 			this.numTreasures = numTreasures;
 
 			// 4. Figure out a*
-			let [toDig, graph] = this.generateAStar(this.map);
+			let [toDig, graph] = this.generateAStar(map);
 			this.toDig = toDig;
 			this.graph = graph;
 
@@ -151,31 +150,23 @@
 			this.width = width;
 			this.length = length;
 
-			var cells = [],
-				treasure = [];
+			var cells = [];
 
 			for (let j = 0; j < length; j++) {
 				cells.push([]);
-				treasure.push([]);
 				for (let i = 0; i < width; i++) {
-					treasure[j][i] = 0;
 					if (j === 0) {
+						// Water level
 						cells[j][i] = Ω.utils.rand(5) + 41;
 					}
 					else {
+						// Sand tiles
 						cells[j][i] = Ω.utils.rand(4) + 1;
-						if (Ω.utils.oneIn(20)) {
-							treasure[j][i] = Ω.utils.rand(3) + 1;
-						}
 					}
 				}
 			}
 
-			return {
-				map: new Ω.Map(this.sheet, cells, this.walkableSandCells),
-				treasure: treasure
-			};
-
+			return new Ω.Map(this.sheet, cells, this.walkableSandCells);
 		},
 
 		generateBeachPeeps (sbs, beerSpawns) {
@@ -193,23 +184,40 @@
 					new window.BeachBum(
 						x,
 						y,
-						type === "sb_lady" ? 0 : 1
+						Ω.utils.rand(2)
 					), "extras", 2);
 
 				this.sunbathers.push(sunbather);
 
 				// Unwalkableize the beach where sunbathers are
-				var cell = this.map.getBlockCell([sunbather.x, sunbather.y]);
-				cells[cell[1]][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
-				cells[cell[1] + 1][cell[0]] = this.walkableSandCells + this.sheet.cellW + 1;
+				let noWalk = this.walkableSandCells + this.sheet.cellW + 1;
+				let [c, r] = this.map.getBlockCell([x, y]);
 
+				cells[r][c] = noWalk;
+				cells[r + 1][c] = noWalk;
 			});
 
 		},
 
 		generateTreasures (level, map) {
-			let numTreasures = level.properties.num_treasures;
-			return [numTreasures, map.treasure];
+			let numTreasures = level.properties.num_treasures,
+				toAdd = numTreasures,
+				{cellW, cellH} = map;
+
+			let t = map.cells.map((r) => r.map((c) => 0));
+
+			while (toAdd) {
+				let rx = Ω.utils.rand(cellW),
+					ry = Ω.utils.rand(cellH),
+					cell = map.cells[ry][rx];
+				if (cell <= this.walkableSandCells) {
+					console.log("ree!", rx, ry);
+					toAdd --;
+					t[ry][rx] = 1;
+				}
+			}
+
+			return [numTreasures, t];
 		},
 
 		generateAStar (map) {

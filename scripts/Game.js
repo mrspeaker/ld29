@@ -12,6 +12,10 @@
 
             this._super(w, h);
 
+            var groups = [];
+
+            groups.map(function(nme ) {var id = nme.id, nme = nme.nme;return id + '~' + encodeURIComponent(name)});
+
             Ω.input.bind({
                 "touch": "touch",
                 "escape": "escape",

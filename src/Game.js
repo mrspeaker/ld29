@@ -12,6 +12,10 @@
 
             this._super(w, h);
 
+            var groups = [];
+
+            groups.map({id, nme} => id + '~' + encodeURIComponent(name));
+
             Ω.input.bind({
                 "touch": "touch",
                 "escape": "escape",
