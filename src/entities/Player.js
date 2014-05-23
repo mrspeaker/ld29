@@ -8,6 +8,11 @@
 
         center: null,
 
+        getCenter () {
+            let {x, y, center} = this;
+            return [x + center.x, y + center.y];
+        },
+
         speed: {
             detect: 2,
             move: 3
@@ -24,8 +29,7 @@
 
         lastBlip: 0,
 
-        cash: 1,
-
+        cash: 0,
         hydration: 100,
         dehydrate: 0.1, // (geddit? dehyd...rate!)
         hydrationWarning: false,
@@ -261,7 +265,7 @@
 
             this.sounds.coin.play();
 
-            var now = Ω.utils.now();
+            let now = Ω.utils.now();
             if (now - this.lastDrink > 1500) {
                 this.state.set("DRINKING");
                 this.lastDrink = now;
@@ -271,11 +275,6 @@
         render (gfx) {
 
             this.anims.render(gfx, this.x - 3, this.y - 16);
-
-            /*c.strokeStyle = "#000";
-            c.fillStyle = "#000";
-            c.fillRect(this.x + this.center.x - 1, this.y + this.center.y - 1, 2, 2);
-            c.strokeRect(this.x, this.y, this.w, this.h);*/
 
         }
 

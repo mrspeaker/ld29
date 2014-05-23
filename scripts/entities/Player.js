@@ -8,6 +8,11 @@
 
         center: null,
 
+        getCenter: function () {
+            var x = (center = this).x, y = center.y, center = center.center;
+            return [x + center.x, y + center.y];
+        },
+
         speed: {
             detect: 2,
             move: 3
@@ -24,8 +29,7 @@
 
         lastBlip: 0,
 
-        cash: 1,
-
+        cash: 0,
         hydration: 100,
         dehydrate: 0.1, // (geddit? dehyd...rate!)
         hydrationWarning: false,
@@ -271,11 +275,6 @@
         render: function (gfx) {
 
             this.anims.render(gfx, this.x - 3, this.y - 16);
-
-            /*c.strokeStyle = "#000";
-            c.fillStyle = "#000";
-            c.fillRect(this.x + this.center.x - 1, this.y + this.center.y - 1, 2, 2);
-            c.strokeRect(this.x, this.y, this.w, this.h);*/
 
         }
 

@@ -114,10 +114,13 @@
 		dig (player, stage) {
 
 			let {map, sheet} = this,
-				{x, y, center} = player,
-				pos = [x + center.x, y + center.y];
+				tileOffset = sheet.cellW + 6;
 
-			map.setBlock(pos, sheet.cellW + 6 + stage); // Ummmm... what is 6?
+			map.setBlock(player.getCenter(), tileOffset + stage);
+
+		},
+
+		digged (player) {
 
 		},
 

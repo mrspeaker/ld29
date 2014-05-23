@@ -25,7 +25,7 @@
 
         init: function () {
 
-            //Ω.Sound._setVolume(0);
+            Ω.Sound._setVolume(0);
             this.reset();
 
         },
