@@ -73,25 +73,28 @@
         },
 
         tick () {
-
             let {state, anims, sounds, screen, beach} = this;
 
             state.tick();
             let count = state.count;
 
             switch(state.get()) {
+
             case "BORN":
                 state.set("IDLE");
                 break;
+
             case "IDLE":
                 state.set("LOOKING");
                 break;
+
             case "LOOKING":
                 if (state.first()) {
                     anims.set(`detect${ this.dir === DIRS.up ? "Up" : "Down"}`);
                 }
                 this.tick_LOOKING();
                 break;
+
             case "DIGGING":
                 if (state.first()) {
                     anims.set("dig");
@@ -117,6 +120,7 @@
                 }
                 this.anims.tick();
                 break;
+
             case "ROCKINGOUT":
                 if (state.first()) {
                     anims.set("rockout");
@@ -129,6 +133,7 @@
                     state.set("LOOKING");
                 }
                 break;
+
             case "DRINKING":
                 if (state.first()) {
                     this.cash -= 1;
@@ -140,11 +145,13 @@
                 }
                 anims.tick();
                 break;
+
             case "CAPTURED":
                 if (count > 100) {
                     screen.gameover("CAPTURED");
                 }
                 break;
+
             case "DEHYDRATED":
                 if (count > 100) {
                     screen.gameover("DEHYDRATED");
@@ -157,17 +164,14 @@
         },
 
         tick_LOOKING () {
+            let { x, y, w, h, anims, beach, state, sounds } = this;
 
-            var xo = 0,
+            let xo = 0,
                 yo = 0,
                 speed = this.detecting ? this.speed.detect : this.speed.move;
 
-            if (Ω.input.isDown("left")) {
-                xo -= speed;
-            }
-            if (Ω.input.isDown("right")) {
-                xo += speed;
-            }
+            if (Ω.input.isDown("left")) xo -= speed;
+            if (Ω.input.isDown("right")) xo += speed;
             if (Ω.input.isDown("up")) {
                 this.dir = DIRS.up;
                 yo -= speed;
@@ -182,65 +186,56 @@
                 yo /= Math.sqrt(2);
             }
 
-            if (Ω.input.pressed("up")) {
-                this.anims.set("detectUp");
-            }
-            if (Ω.input.pressed("down")) {
-                this.anims.set("detectDown");
-            }
-            if (Ω.input.pressed("left")) {
-                this.anims.set("detectLeft");
-            }
-            if (Ω.input.pressed("right")) {
-                this.anims.set("detectRight");
-            }
+            if (Ω.input.pressed("up")) anims.set("detectUp");
+            if (Ω.input.pressed("down")) anims.set("detectDown");
+            if (Ω.input.pressed("left")) anims.set("detectLeft");
+            if (Ω.input.pressed("right")) anims.set("detectRight");
 
-            let [xm, ym] = this.move(xo, yo, this.beach.map);
-
+            let [xm, ym] = this.move(xo, yo, beach.map);
             if (xm || ym) {
-                this.anims.tick();
+                anims.tick();
 
                 // Constrain to beach.
-                if (this.x < 0) this.x = 0;
-                if (this.x > this.beach.w - this.w) this.x = this.beach.w - this.w;
-                if (this.y > this.beach.h - this.h) this.y = this.beach.h - this.h;
+                if (x < 0) x = 0;
+                if (x > beach.w - w) x = beach.w - w;
+                if (y > beach.h - h) y = beach.h - h;
             }
 
             // TODO: searches every frame... not just once.
-            let gets = this.beach.search(this);
+            let gets = beach.search(this);
             if (gets && Ω.utils.now() - this.lastBlip > 30) {
-                this.sounds.blip.play();
-                this.add(new window.Blip(this.x, this.y));
+                sounds.blip.play();
+                this.add(new window.Blip(x, y));
                 this.lastBlip = Ω.utils.now();
             }
 
             if (Ω.input.pressed("fire")) {
                 // TODO: searches every frame... not just once.
-                let gets = this.beach.search(this, false);
+                let gets = beach.search(this, false);
                 if (gets) {
-                    this.state.set("DIGGING", {treasure: gets});
+                    state.set("DIGGING", {treasure: gets});
                     this.drinkOk = false;
                 } else {
                     this.drinkOk = true;
                 }
             } else {
                 if (Ω.input.isDown("fire")) {
-                    Ω.Physics.checkCollision(this, this.beach.stands, "drink");
+                    Ω.Physics.checkCollision(this, beach.stands, "drink");
                 }
             }
 
             this.hydration -= this.dehydrate;
             if (!this.hydrationWarning && this.hydration < 20) {
-                this.sounds.thirsty.play();
+                sounds.thirsty.play();
                 this.hydrationWarning = true;
             } else if (this.hydrationWarning && this.hydration > 20) {
-                this.sounds.thirsty.stop();
+                sounds.thirsty.stop();
                 this.hydrationWarning = false;
             }
 
             if (this.hydration < 0) {
                 this.screen.predead();
-                this.state.set("DEHYDRATED");
+                state.set("DEHYDRATED");
             }
 
             return true;

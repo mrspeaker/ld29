@@ -72,58 +72,60 @@
 
         tick: function () {
 
-            this.state.tick();
+            var state = (player = this).state, beach = player.beach, player = player.player;
 
-            switch (this.state.get()) {
+            state.tick();
+
+            switch (state.get()) {
+
             case "BORN":
-                if (this.beach.loaded) {
-                    this.state.set("DAYBREAK");
+                if (beach.loaded) {
+                    state.set("DAYBREAK");
                 }
                 break;
+
             case "DAYBREAK":
-                if (this.state.first()) {
+                if (state.first()) {
                     this.sounds.tune.stop();
                     this.tick_DAY();
                 }
-                if (this.state.count === 30) {
+                if (state.count === 30) {
                     this.curTime = 0;
                     window.game.setDialog(new window.PopupDialog("  dig and drink."));
-                    this.state.set("DAY");
+                    state.set("DAY");
                 }
                 break;
+
             case "DAY":
-                if (this.state.first()) {
+                if (state.first()) {
                     this.sounds.tune.play();
                 }
                 this.curTime++;
-                //if (this.curTime / 2000 > 8) {
-                    // Day over.
-                //    this.state.set("SUNSET");
-                //} else {
-                    this.tick_DAY();
-                //}
+                this.tick_DAY();
                 break;
+
             case "SUNSET":
                 // No more "days"... maybe v2.
-                if (this.state.first()) {
-                    this.cashcashmoney += this.player.cash;
-                    this.player.cash = 0;
+                if (state.first()) {
+                    this.cashcashmoney += player.cash;
+                    player.cash = 0;
                     window.game.setDialog(new window.PopupDialog("day is done."));
 
                 }
-                if (this.state.count > 10) {
+                if (state.count > 10) {
                     this.reset();
                 }
                 break;
+
             case "CLEARED":
-                if (this.state.first()) {
+                if (state.first()) {
                     Ω.Sound._reset();
-                    this.player.sounds.coin.play();
-                    this.cashcashmoney += this.player.cash;
-                    this.player.cash = 0;
+                    player.sounds.coin.play();
+                    this.cashcashmoney += player.cash;
+                    player.cash = 0;
                     window.game.setDialog(new window.PopupDialog("level clear!"));
                 }
-                if (this.state.count === 10) {
+                if (state.count === 10) {
                     this.reset();
                 }
                 break;
@@ -131,8 +133,8 @@
             case "GAMEOVER":
                 window.game.setScreen(
                     new window.GameOverScreen(
-                        this.state.data.manner,
-                        this.cashcashmoney + this.player.cash
+                        state.data.manner,
+                        this.cashcashmoney + player.cash
                     )
                 );
                 break;
