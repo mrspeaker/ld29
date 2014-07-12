@@ -144,18 +144,20 @@
 
         tick_DAY () {
 
+            let {beach} = this;
+
             this.tickBodies();
 
             this.camera.moveTo(
-                this.beach.pos.x,
-                this.beach.pos.y
+                beach.pos.x,
+                beach.pos.y
             );
 
             if (this.cop.state.is("CHASE")) {
                 Ω.Physics.checkCollision(this.player, [this.cop]);
             }
 
-            if (this.beach.toDig === 0) {
+            if (beach.toDig === 0) {
                 this.state.set("CLEARED");
             }
         },
@@ -167,11 +169,9 @@
             this.sounds.dead.play();
         },
 
-        /* jshint ignore:start */
         gameover (manner) {
             this.state.set("GAMEOVER", {manner});
         },
-        /* jshint ignore:end */
 
         render (gfx) {
 

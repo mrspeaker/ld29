@@ -145,8 +145,8 @@
 			let {map, graph, player} = this,
 				{w, h} = map.sheet,
 				nodes = graph.nodes,
-				from = nodes[e.y / w | 0][e.x / h | 0],
-				to = nodes[player.y / w | 0][player.x / h | 0];
+				from = nodes[e.y / h | 0][e.x / w | 0],
+				to = nodes[player.y / h | 0][player.x / w | 0];
 
 			// Recompute A*
 			return Ω.Math.aStar.search(nodes, from, to);

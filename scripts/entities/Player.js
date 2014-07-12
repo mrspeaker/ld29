@@ -99,6 +99,7 @@
                 if (state.first()) {
                     anims.set("dig");
                     this.digging = true;
+
                 }
 
                 // Do hole animation
